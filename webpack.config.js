@@ -6,8 +6,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        use: "swc-loader"
+        test: /\.(j|t)s$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: "swc-loader",
+        }
       },
       {
         test: /\.css$/,
