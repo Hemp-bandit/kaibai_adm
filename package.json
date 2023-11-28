@@ -29,6 +29,7 @@
   "dependencies": {
     "daisyui": "^4.4.11",
     "normalize.css": "^8.0.1",
-    "vue": "^3.3.9"
+    "vue": "^3.3.9",
+    "vue-router": "^4.2.5"
   }
 }
