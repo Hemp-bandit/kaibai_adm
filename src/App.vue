@@ -1,11 +1,15 @@
 <template>
-  <ul class="menu menu-horizontal bg-base-200 w-56 rounded-box">
-    <li>
-      <a v-for="(ele, index ) in menus" :key="index" @click="menu_item_click(ele.route_path)">{{ ele.name }}</a>
-    </li>
-  </ul>
+  <div class="flex">
+    <ul class="menu menu-horizontal bg-base-200 w-56 rounded-box">
+      <li>
+        <a v-for="(ele, index ) in menus" :key="index" @click="menu_item_click(ele.route_path)">{{ ele.name }}</a>
+      </li>
+    </ul>
 
-  <RouterView />
+    <div class="artboard artboard-horizontal phone-6">
+      <RouterView />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -26,12 +30,9 @@ const menus = reactive([
     route_path: 'flow'
   },
 ] as T_menu_item[])
-const route = useRouter()
+const router = useRouter()
 const menu_item_click = (route_path: string) => {
-  console.log('%c [ route_path ]-28-「App.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', route_path);
-  route.replace({
-    name: route_path
-  })
+  router.push({ name: route_path })
 }
 
 </script>

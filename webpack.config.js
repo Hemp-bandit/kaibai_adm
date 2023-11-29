@@ -6,7 +6,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(j|t)s$/,
+        test: /\.(js|ts|cjs)$/,
         exclude: /(node_modules)/,
         use: {
           loader: "swc-loader",
@@ -16,15 +16,15 @@ module.exports = {
         test: /\.css$/,
         use: [
           'style-loader',
-          { loader: 'css-loader', options: { importLoaders: 1 } },
-          'postcss-loader',
+          "css-loader",
+          'less-loader'
         ]
       },
       {
         test: /\.less$/,
         use: [
           'style-loader',
-          { loader: 'css-loader', options: { importLoaders: 1 } },
+          "css-loader",
           'less-loader'
         ]
       },
@@ -39,7 +39,7 @@ module.exports = {
     new VueLoaderPlugin()
   ],
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js', '.cjs'],
     alias: {
       '@': path.resolve(__dirname, './src')
     }
