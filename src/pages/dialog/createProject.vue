@@ -25,12 +25,12 @@ import { I_Project } from '@/comm/entity';
 import { createProject } from '@/comm/request';
 import { createDiscreteApi } from 'naive-ui';
 import { reactive, ref } from 'vue';
-import { openOrClose } from './commData';
+import { openOrCloseCreateProjectDialog } from './commData';
 
 
 const showModal = ref(false)
 
-openOrClose.subscribe(modalStatus => {
+openOrCloseCreateProjectDialog.subscribe(modalStatus => {
   showModal.value = modalStatus
 })
 
@@ -49,7 +49,7 @@ async function handCreateProject() {
   try {
     await createProject(formValue);
     message.success('创建项目成功!');
-    openOrClose.next(false)
+    openOrCloseCreateProjectDialog.next(false)
   } catch (error) {
     message.error(error)
   }
@@ -57,7 +57,7 @@ async function handCreateProject() {
 
 function handCancel() {
   drop()
-  openOrClose.next(false)
+  openOrCloseCreateProjectDialog.next(false)
 }
 function drop() {
   formValue.name = ''

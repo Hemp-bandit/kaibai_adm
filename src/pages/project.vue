@@ -34,11 +34,11 @@
   </n-space>
 </template>
 <script lang="ts" setup>
-import { onMounted, provide, reactive, ref } from 'vue';
-import { T_Page_query, T_Page_query_res, getProjectList } from '@/comm/request'
 import { I_Project } from '@/comm/entity';
-import createProject from './dialog/createProject.vue'
-import { openOrClose } from './dialog/commData';
+import { T_Page_query, T_Page_query_res, getProjectList } from '@/comm/request';
+import { onMounted, reactive } from 'vue';
+import { openOrCloseCreateProjectDialog } from './dialog/commData';
+import createProject from './dialog/createProject.vue';
 
 
 const pageData = reactive({
@@ -57,7 +57,7 @@ onMounted(async () => {
 })
 
 function onCarateProject() {
-  openOrClose.next(true)
+  openOrCloseCreateProjectDialog.next(true)
 }
 
 </script>
