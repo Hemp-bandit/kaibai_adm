@@ -5,10 +5,10 @@
     <n-table :bordered="true" :single-line="false" striped>
       <thead>
         <tr>
-          <th>id</th>
+          <th style="width: 50px;">id</th>
           <th>项目名称</th>
-          <th>创建时间</th>
-          <th>更新时间</th>
+          <th style="width: 150px;">创建时间</th>
+          <th style="width: 150px;">更新时间</th>
           <th style="width: 300px;">操作</th>
         </tr>
       </thead>
@@ -28,6 +28,8 @@
         </tr>
       </tbody>
     </n-table>
+    <n-pagination v-model:page="pageData.tableData.page_no"
+      :page-count="pageData.tableData.total % pageData.tableData.page_size" :on-update:page="pageUpdate" />
 
     <createProject />
 
@@ -42,22 +44,35 @@ import createProject from './dialog/createProject.vue';
 
 
 const pageData = reactive({
-  pageSetting: {
-    offset: 0,
-    size: 10
-  } as T_Page_query,
   tableData: {
+    total: 0,
+    page_no: 1
   } as T_Page_query_res<I_Project>,
 })
 
 
 onMounted(async () => {
-  const res = await getProjectList({ offset: 0, size: 10 });
-  pageData.tableData = res.data.data;
+  await getProject();
 })
+openOrCloseCreateProjectDialog.subscribe(async status => {
+  if (!status) {
+    // pageData.tableData.page_no = 1;
+    await getProject()
+  }
+})
+
+async function getProject() {
+  const { data: { data } } = await getProjectList({ offset: pageData.tableData.page_no, size: 10 });
+  pageData.tableData = data;
+}
 
 function onCarateProject() {
   openOrCloseCreateProjectDialog.next(true)
+}
+
+async function pageUpdate(page: number) {
+  pageData.tableData.page_no = page;
+  await getProject()
 }
 
 </script>
