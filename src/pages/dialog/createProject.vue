@@ -20,12 +20,16 @@
   </div>
 </template>
 
+<script lang="ts">
+import { Subject } from 'rxjs'
+export const openOrCloseCreateProjectDialog = new Subject<boolean>();
+</script>
+
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
 import { createProject } from '@/comm/request';
 import { createDiscreteApi } from 'naive-ui';
 import { reactive, ref } from 'vue';
-import { openOrCloseCreateProjectDialog } from './commData';
 
 
 const showModal = ref(false)
@@ -59,6 +63,7 @@ function handCancel() {
   drop()
   openOrCloseCreateProjectDialog.next(false)
 }
+
 function drop() {
   formValue.name = ''
 }

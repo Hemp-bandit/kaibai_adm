@@ -9,7 +9,6 @@ import 'vfonts/Lato.css'
 // 等宽字体
 import 'vfonts/FiraCode.css'
 
-
 createApp(App)
   .use(naive)
   .use(route)

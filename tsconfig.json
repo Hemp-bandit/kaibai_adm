@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "typeRoots": [
       "./src/types/index.d.ts",
-      "./node_modules/@types",
+      "./node_modules/@types"
     ],
     "paths": {
       "@/*": [
