@@ -12,7 +12,7 @@
         <template #footer>
           <n-space>
             <n-button type="primary" @click="handCreateProject">确认</n-button>
-            <n-button type="error" @click="showModal = false">取消</n-button>
+            <n-button type="error" @click="handCancel">取消</n-button>
           </n-space>
         </template>
       </n-card>
@@ -22,8 +22,18 @@
 
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
-import { inject, reactive } from 'vue';
-const showModal = inject('createProject', false)
+import { createProject } from '@/comm/request';
+import { createDiscreteApi } from 'naive-ui';
+import { reactive, ref } from 'vue';
+import { openOrClose } from './commData';
+
+
+const showModal = ref(false)
+
+openOrClose.subscribe(modalStatus => {
+  showModal.value = modalStatus
+})
+
 const formValue = reactive<Pick<I_Project, 'name'>>({ name: '' })
 
 const rules = reactive({
@@ -35,10 +45,20 @@ const rules = reactive({
 })
 
 async function handCreateProject() {
-
+  const { message } = createDiscreteApi(['message']);
+  try {
+    await createProject(formValue);
+    message.success('创建项目成功!');
+    openOrClose.next(false)
+  } catch (error) {
+    message.error(error)
+  }
 }
 
-
+function handCancel() {
+  drop()
+  openOrClose.next(false)
+}
 function drop() {
   formValue.name = ''
 }

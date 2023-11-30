@@ -35,9 +35,10 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, provide, reactive, ref } from 'vue';
-import { T_Page_query, T_Page_query_res, getProjectList } from '@/comm/reuest'
+import { T_Page_query, T_Page_query_res, getProjectList } from '@/comm/request'
 import { I_Project } from '@/comm/entity';
 import createProject from './dialog/createProject.vue'
+import { openOrClose } from './dialog/commData';
 
 
 const pageData = reactive({
@@ -55,12 +56,9 @@ onMounted(async () => {
   pageData.tableData = res.data.data;
 })
 
-const createProjectOpen = ref(false)
-provide('createProject', createProjectOpen)
-
 function onCarateProject() {
-  createProjectOpen.value = true
+  openOrClose.next(true)
 }
 
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="less"></style>@/comm/request

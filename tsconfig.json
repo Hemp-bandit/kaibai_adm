@@ -19,8 +19,6 @@
     "typeRoots": [
       "./src/types/index.d.ts",
       "./node_modules/@types",
-      "./node_modules/@vicons/ionicons5",
-      "./node_modules/naive-ui"
     ],
     "paths": {
       "@/*": [
@@ -33,7 +31,6 @@
     "naive-ui/volar"
   ],
   "exclude": [
-    "node_modules",
     "release",
     "dist",
   ]
