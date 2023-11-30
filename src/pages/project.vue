@@ -38,11 +38,11 @@
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
 import { T_Page_query_res, deleteProject, getProjectList } from '@/comm/request';
+import { createDiscreteApi } from 'naive-ui';
+import { Subject } from 'rxjs';
 import { onMounted, reactive } from 'vue';
 import { openOrCloseCreateProjectDialog } from './dialog/commData';
 import createProject from './dialog/createProject.vue';
-import { c, createDiscreteApi } from 'naive-ui';
-import { Subject } from 'rxjs'
 const flashList = new Subject<null>()
 
 
