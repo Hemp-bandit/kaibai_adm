@@ -4,9 +4,13 @@
       "syntax": "typescript",
       "tsx": true
     },
-    "externalHelpers": true
+    "transform": {
+      "legacyDecorator": true
+    }
   },
-  "env": {
-    "targets": "Chrome >= 48"
+  "module": {
+    "type": "commonjs",
+    "strict": true,
+    "lazy": true
   }
 }

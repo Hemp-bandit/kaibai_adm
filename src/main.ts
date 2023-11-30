@@ -3,10 +3,14 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import route from "./router";
 
-import Varlet from '@varlet/ui'
-import '@varlet/ui/es/styles/style'
+import naive from 'naive-ui'
+// 通用字体
+import 'vfonts/Lato.css'
+// 等宽字体
+import 'vfonts/FiraCode.css'
+
 
 createApp(App)
-  .use(Varlet)
+  .use(naive)
   .use(route)
   .mount('#app');

@@ -6,7 +6,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts|cjs)$/,
+        test: /\.(js|ts|cjs|mjs)$/,
         exclude: /(node_modules)/,
         use: {
           loader: "swc-loader",
@@ -36,7 +36,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: "./static/index.html" }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
   ],
   resolve: {
     extensions: ['.ts', '.js', '.cjs'],

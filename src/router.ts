@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 const route = createRouter({
   routes: [
@@ -13,6 +13,6 @@ const route = createRouter({
       component: () => import('./pages/flow.vue')
     }
   ],
-  history: createWebHistory()
+  history: createWebHashHistory()
 })
 export default route
