@@ -19,8 +19,13 @@
   <n-message-provider>
     <content />
   </n-message-provider>
+
+  <n-dialog-provider>
+    <content />
+  </n-dialog-provider>
 </template>
 
 <script setup lang="ts">
+import { NMessageProvider, NDialogProvider } from 'naive-ui'
 import { menuOptions } from './comm/menus';
 </script>

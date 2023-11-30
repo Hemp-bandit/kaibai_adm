@@ -40,6 +40,9 @@ export async function getProjectList(data: T_Page_query) {
 }
 
 export async function createProject(data: Pick<I_Project, 'name'>) {
-  type rsp = T_Basic_rsp<string>
-  return await instance.post<rsp>('/project/crate_project', data);
+  return await instance.post<T_Basic_rsp<string>>('/project/crate_project', data);
+}
+
+export async function deleteProject(data: Pick<I_Project, 'id'>) {
+  return await instance.delete<T_Basic_rsp<string>>('/project/delete_project', { data })
 }

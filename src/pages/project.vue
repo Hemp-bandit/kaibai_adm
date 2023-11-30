@@ -22,14 +22,14 @@
             <n-space>
               <n-button type="primary">查看流程</n-button>
               <n-button type="warning">重命名</n-button>
-              <n-button type="error"> 删除项目</n-button>
+              <n-button type="error" @click="delProject(ele.id)"> 删除项目</n-button>
             </n-space>
           </td>
         </tr>
       </tbody>
     </n-table>
-    <n-pagination v-model:page="pageData.tableData.page_no"
-      :page-count="pageData.tableData.total % pageData.tableData.page_size" :on-update:page="pageUpdate" />
+    <n-pagination v-model:page="pageData.tableData.page_no" :page-count="pageData.tableData.total"
+      :on-update:page="pageUpdate" />
 
     <createProject />
 
@@ -37,10 +37,13 @@
 </template>
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
-import { T_Page_query, T_Page_query_res, getProjectList } from '@/comm/request';
+import { T_Page_query_res, deleteProject, getProjectList } from '@/comm/request';
 import { onMounted, reactive } from 'vue';
 import { openOrCloseCreateProjectDialog } from './dialog/commData';
 import createProject from './dialog/createProject.vue';
+import { c, createDiscreteApi } from 'naive-ui';
+import { Subject } from 'rxjs'
+const flashList = new Subject<null>()
 
 
 const pageData = reactive({
@@ -52,17 +55,24 @@ const pageData = reactive({
 
 
 onMounted(async () => {
-  await getProject();
+  flashList.next(null)
 })
+
 openOrCloseCreateProjectDialog.subscribe(async status => {
   if (!status) {
-    // pageData.tableData.page_no = 1;
-    await getProject()
+    pageData.tableData.page_no = 1;
+    flashList.next(null)
   }
+})
+
+flashList.subscribe(async () => {
+  await getProject()
 })
 
 async function getProject() {
   const { data: { data } } = await getProjectList({ offset: pageData.tableData.page_no, size: 10 });
+  const count = Math.ceil(data.total / data.page_size);
+  data.total = count < 0 ? 1 : count
   pageData.tableData = data;
 }
 
@@ -73,6 +83,28 @@ function onCarateProject() {
 async function pageUpdate(page: number) {
   pageData.tableData.page_no = page;
   await getProject()
+}
+
+async function delProject(id: number) {
+  const { message, dialog } = createDiscreteApi(['message', 'dialog'])
+  dialog.error({
+    title: '警告',
+    content: '你确定删除当前项目？',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      try {
+        const { data: { rsp_msg } } = await deleteProject({ id });
+        message.success(rsp_msg);
+        flashList.next(null)
+      } catch (error) {
+        message.error(error)
+      }
+    },
+    onNegativeClick: () => {
+    }
+  })
+
 }
 
 </script>
