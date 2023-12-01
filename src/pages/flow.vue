@@ -37,7 +37,7 @@
 <script lang="ts" setup>
 import { I_Flow } from '@/comm/entity';
 import { T_Page_query_res, getFlowList } from '@/comm/request';
-import createFlow from '@/pages/dialog/createFlow.vue';
+import createFlow, { openOrCloseCreateFlowDialog } from '@/pages/dialog/createFlow.vue';
 import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Subject } from 'rxjs';
@@ -52,24 +52,24 @@ const pageData = reactive({
   } as T_Page_query_res<I_Flow>,
 })
 
+const flashSub = flashFlowList.subscribe(async () => {
+  const { data: { data } } = await getFlowList({ project_id: +query.projectId });
+  const count = Math.ceil(data.total / data.page_size);
+  data.total = count < 0 ? 1 : count
+  pageData.tableData = data;
+})
+
 onMounted(() => {
   if (!query.projectId) {
     useRouter().replace({ name: "project" })
   }
-  flashFlowList
-    .subscribe(async () => {
-      const { data: { data } } = await getFlowList({ project_id: +query.projectId });
-      const count = Math.ceil(data.total / data.page_size);
-      data.total = count < 0 ? 1 : count
-      pageData.tableData = data;
-    })
 
   flashFlowList.next(null)
 })
 
 onBeforeUnmount(() => {
   // 页面退出时完成subject.避免重复订阅
-  flashFlowList.complete();
+  flashSub.unsubscribe();
 })
 
 async function editFlow(id: number) {
@@ -77,10 +77,10 @@ async function editFlow(id: number) {
 }
 
 async function delFlow(id: number) {
-
 }
 
-function onCarateFlow(id: number) {
+function onCarateFlow() {
+  openOrCloseCreateFlowDialog.next(true);
 
 }
 

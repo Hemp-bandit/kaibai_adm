@@ -36,6 +36,9 @@ export type T_flow_page_query = {
   project_id: number
 }
 
+type T_create_flow = T_flow_page_query & Pick<I_Flow, 'name' | 'shell_str'>
+
+
 export async function getProjectList(data: T_Page_query) {
   type rsp = T_Basic_rsp<T_Page_query_res<I_Project>>
   return await instance.post<rsp>('/project/get_project_list', data)
@@ -52,4 +55,8 @@ export async function deleteProject(data: Pick<I_Project, 'id'>) {
 export async function getFlowList(data: T_flow_page_query) {
   type rsp = T_Basic_rsp<T_Page_query_res<I_Flow>>
   return await instance.post<rsp>('/flow/get_flow_list', data)
+}
+
+async function createFlow(data: T_create_flow) {
+  return await instance.post<T_Basic_rsp<string>>('/flow/create_flow', data);
 }
