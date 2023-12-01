@@ -34,19 +34,16 @@
   </n-space>
 </template>
 
-<script lang="ts">
-import { Subject, throttle, interval } from 'rxjs';
-const flashFlowList = new Subject<null>();
-
-</script>
-
 <script lang="ts" setup>
 import { I_Flow } from '@/comm/entity';
 import { T_Page_query_res, getFlowList } from '@/comm/request';
+import createFlow from '@/pages/dialog/createFlow.vue';
 import { onBeforeUnmount, onMounted, reactive } from 'vue';
-import createFlow from '@/pages/dialog/createFlow.vue'
 import { useRoute, useRouter } from 'vue-router';
+import { Subject } from 'rxjs';
 
+// 组件初始化时创建subject & subscribe subject
+const flashFlowList = new Subject<null>();
 const query = useRoute().query as { projectId?: string }
 const pageData = reactive({
   tableData: {
@@ -59,18 +56,21 @@ onMounted(() => {
   if (!query.projectId) {
     useRouter().replace({ name: "project" })
   }
+  flashFlowList
+    .subscribe(async () => {
+      const { data: { data } } = await getFlowList({ project_id: +query.projectId });
+      const count = Math.ceil(data.total / data.page_size);
+      data.total = count < 0 ? 1 : count
+      pageData.tableData = data;
+    })
+
   flashFlowList.next(null)
 })
 
-flashFlowList
-  .pipe(throttle(() => interval(2000)))
-  .subscribe(async () => {
-    const { data: { data } } = await getFlowList({ project_id: +query.projectId });
-    const count = Math.ceil(data.total / data.page_size);
-    data.total = count < 0 ? 1 : count
-    pageData.tableData = data;
-  })
-
+onBeforeUnmount(() => {
+  // 页面退出时完成subject.避免重复订阅
+  flashFlowList.complete();
+})
 
 async function editFlow(id: number) {
 

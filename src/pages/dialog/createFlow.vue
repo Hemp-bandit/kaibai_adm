@@ -22,19 +22,18 @@
 
 <script lang="ts">
 import { Subject } from 'rxjs'
-export const openOrCloseCreateProjectDialog = new Subject<boolean>();
+export const openOrCloseCreateFlowDialog = new Subject<boolean>();
 </script>
 
-<script lang="ts" setup>
+<script lang="ts" setup >
 import { I_Project } from '@/comm/entity';
 import { createProject } from '@/comm/request';
 import { createDiscreteApi } from 'naive-ui';
 import { reactive, ref } from 'vue';
 
-
-const showModal = ref(false)
-
-openOrCloseCreateProjectDialog.subscribe(modalStatus => {
+const showModal = ref(false);
+openOrCloseCreateFlowDialog.subscribe(modalStatus => {
+  console.log('%c [ modalStatus ]-37-「createFlow.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', modalStatus);
   showModal.value = modalStatus
 })
 
@@ -53,18 +52,17 @@ async function handCreateProject() {
   try {
     await createProject(formValue);
     message.success('创建项目成功!');
-    openOrCloseCreateProjectDialog.next(false)
+    openOrCloseCreateFlowDialog.next(false)
   } catch (error) {
     message.error(error)
   }
 }
 
 function handCancel() {
-  drop()
-  openOrCloseCreateProjectDialog.next(false)
+  openOrCloseCreateFlowDialog.next(false)
 }
 
 function drop() {
-  formValue.name = ''
+  // formValue.name = ''
 }
 </script>

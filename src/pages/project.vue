@@ -30,15 +30,11 @@
     <n-pagination v-model:page="pageData.tableData.page_no" :page-count="pageData.tableData.total"
       :on-update:page="pageUpdate" />
 
-    <createProject />
+    <createProject ref="cp" />
 
   </n-space>
 </template>
 
-<script lang="ts">
-import { Subject } from 'rxjs';
-const flashProjectList = new Subject<null>();
-</script>
 
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
@@ -48,6 +44,9 @@ import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import createProject, { openOrCloseCreateProjectDialog } from './dialog/createProject.vue';
 
+import { Subject } from 'rxjs';
+const flashProjectList = new Subject<null>();
+
 const router = useRouter();
 const pageData = reactive({
   tableData: {
@@ -56,27 +55,25 @@ const pageData = reactive({
   } as T_Page_query_res<I_Project>,
 })
 
-
-onMounted(async () => {
-  flashProjectList.next(null);
+const flashSubscribe = flashProjectList.subscribe(async () => {
+  const { data: { data } } = await getProjectList({ offset: pageData.tableData.page_no, size: 10 });
+  const count = Math.ceil(data.total / data.page_size);
+  data.total = count < 0 ? 1 : count
+  pageData.tableData = data;
 })
+flashProjectList.next(null);
 
-flashProjectList
-  .subscribe(async () => {
-    const { data: { data } } = await getProjectList({ offset: pageData.tableData.page_no, size: 10 });
-    const count = Math.ceil(data.total / data.page_size);
-    data.total = count < 0 ? 1 : count
-    pageData.tableData = data;
-  })
-
-
-openOrCloseCreateProjectDialog.subscribe(async status => {
+const dialogSubscribe = openOrCloseCreateProjectDialog.subscribe(async status => {
   if (!status) {
     pageData.tableData.page_no = 1;
     flashProjectList.next(null)
   }
 })
 
+onBeforeUnmount(() => {
+  dialogSubscribe.unsubscribe()
+  flashSubscribe.unsubscribe()
+})
 
 function onCarateProject() {
   openOrCloseCreateProjectDialog.next(true)
