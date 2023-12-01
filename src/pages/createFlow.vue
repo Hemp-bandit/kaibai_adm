@@ -1,8 +1,8 @@
 <template>
   <n-space vertical>
     <n-form ref="formRef" inline :label-width="120" :model="formValue" :rules="rules" size="medium">
-      <n-form-item label="流程名称" path="name">
-        <n-input v-model:value="formValue.name" placeholder="输入流程名称" />
+      <n-form-item label="流程名称" path="flow_name">
+        <n-input v-model:value="formValue.flow_name" placeholder="输入流程名称" />
       </n-form-item>
     </n-form>
 
@@ -17,15 +17,15 @@
 </template>
 
 <script lang="ts" setup >
-import { T_create_flow } from '@/comm/request';
+import { T_create_flow, createFlow } from '@/comm/request';
 import * as monaco from 'monaco-editor';
-import { createDiscreteApi } from 'naive-ui';
-import { defineProps, onMounted, reactive } from 'vue';
-
-const props = defineProps({
-  projectId: String
-});
-
+import { FormInst, createDiscreteApi } from 'naive-ui';
+import { onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { flashFlowList } from './flow.vue';
+const formRef = ref<FormInst | null>(null)
+const query = useRoute().query as { projectId?: string }
+const router = useRouter();
 let editor = null;
 
 onMounted(() => {
@@ -39,13 +39,13 @@ onMounted(() => {
   }
 })
 const formValue = reactive<T_create_flow>({
-  name: '',
-  project_id: 0,
+  flow_name: '',
+  project_id: +query.projectId,
   shell_str: ''
 })
 
 const rules = reactive({
-  name: {
+  flow_name: {
     required: true,
     message: '请输入流程名称',
     trigger: 'blur'
@@ -54,23 +54,28 @@ const rules = reactive({
 
 async function handCreateProject() {
   const { message } = createDiscreteApi(['message']);
-  try {
-    formValue.shell_str = editor.getValue();
-    formValue.project_id = +props.projectId;
-    console.log('%c [ formValue ]-59-「createFlow.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', formValue);
+  formRef.value.validate(async error => {
+    if (error) {
+      message.error("创建流程失败")
+      console.error(error);
+    } else {
+      formValue.shell_str = editor.getValue();
+      await createFlow(formValue);
+      flashFlowList.next(null);
+      handCancel()
+      message.success('创建流程成功!');
+    }
+  })
 
-
-    message.success('创建流程成功!');
-  } catch (error) {
-    message.error(error)
-  }
 }
 
 function handCancel() {
+  drop();
+  router.replace({ name: "flow", query })
 }
 
 function drop() {
-  formValue.name = ''
+  formValue.flow_name = ''
 }
 </script>
 

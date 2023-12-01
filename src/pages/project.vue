@@ -30,7 +30,7 @@
     <n-pagination v-model:page="pageData.tableData.page_no" :page-count="pageData.tableData.total"
       :on-update:page="pageUpdate" />
 
-    <createProject ref="cp" />
+    <createProject />
 
   </n-space>
 </template>

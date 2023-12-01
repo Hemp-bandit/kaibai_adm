@@ -33,15 +33,18 @@
   </n-space>
 </template>
 
+<script lang="ts">
+import { Subject } from 'rxjs';
+
+export const flashFlowList = new Subject<null>();
+</script>
+
 <script lang="ts" setup>
 import { I_Flow } from '@/comm/entity';
 import { T_Page_query_res, getFlowList } from '@/comm/request';
 import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Subject } from 'rxjs';
 
-// 组件初始化时创建subject & subscribe subject
-const flashFlowList = new Subject<null>();
 const query = useRoute().query as { projectId?: string }
 const pageData = reactive({
   tableData: {
@@ -79,7 +82,7 @@ async function delFlow(id: number) {
 }
 
 function onCarateFlow() {
-  router.push({ name: 'createFlow' })
+  router.push({ name: 'createFlow', query })
 }
 
 async function pageUpdate(page: number) {
