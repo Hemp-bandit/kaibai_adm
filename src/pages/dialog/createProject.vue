@@ -28,7 +28,6 @@ export const openOrCloseCreateProjectDialog = new Subject<boolean>();
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
 import { createProject } from '@/comm/request';
-import { tryOnScopeDispose } from '@vueuse/core';
 import { createDiscreteApi } from 'naive-ui';
 import { onBeforeUnmount, reactive, ref } from 'vue';
 const showModal = ref(false);
