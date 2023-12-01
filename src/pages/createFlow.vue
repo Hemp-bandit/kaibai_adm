@@ -59,11 +59,15 @@ async function handCreateProject() {
       message.error("创建流程失败")
       console.error(error);
     } else {
-      formValue.shell_str = editor.getValue();
-      await createFlow(formValue);
-      flashFlowList.next(null);
-      handCancel()
-      message.success('创建流程成功!');
+      try {
+        formValue.shell_str = editor.getValue();
+        await createFlow(formValue);
+        flashFlowList.next(null);
+        handCancel()
+        message.success('创建流程成功!');
+      } catch (error) {
+        message.error(error)
+      }
     }
   })
 

@@ -27,9 +27,6 @@
         </tr>
       </tbody>
     </n-table>
-    <n-pagination v-model:page="pageData.tableData.page_no" :page-count="pageData.tableData.total"
-      :on-update:page="pageUpdate" />
-
   </n-space>
 </template>
 
