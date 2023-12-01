@@ -36,7 +36,7 @@ export type T_flow_page_query = {
   project_id: number
 }
 
-type T_create_flow = T_flow_page_query & Pick<I_Flow, 'name' | 'shell_str'>
+export type T_create_flow = T_flow_page_query & Pick<I_Flow, 'name' | 'shell_str'>
 
 
 export async function getProjectList(data: T_Page_query) {

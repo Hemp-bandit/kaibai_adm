@@ -30,14 +30,12 @@
     <n-pagination v-model:page="pageData.tableData.page_no" :page-count="pageData.tableData.total"
       :on-update:page="pageUpdate" />
 
-    <createFlow />
   </n-space>
 </template>
 
 <script lang="ts" setup>
 import { I_Flow } from '@/comm/entity';
 import { T_Page_query_res, getFlowList } from '@/comm/request';
-import createFlow, { openOrCloseCreateFlowDialog } from '@/pages/dialog/createFlow.vue';
 import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Subject } from 'rxjs';
@@ -59,9 +57,10 @@ const flashSub = flashFlowList.subscribe(async () => {
   pageData.tableData = data;
 })
 
+const router = useRouter();
 onMounted(() => {
   if (!query.projectId) {
-    useRouter().replace({ name: "project" })
+    router.replace({ name: "project" })
   }
 
   flashFlowList.next(null)
@@ -80,8 +79,7 @@ async function delFlow(id: number) {
 }
 
 function onCarateFlow() {
-  openOrCloseCreateFlowDialog.next(true);
-
+  router.push({ name: 'createFlow' })
 }
 
 async function pageUpdate(page: number) {
