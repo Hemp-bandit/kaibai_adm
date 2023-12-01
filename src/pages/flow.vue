@@ -38,7 +38,7 @@ export const flashFlowList = new Subject<null>();
 
 <script lang="ts" setup>
 import { I_Flow } from '@/comm/entity';
-import { T_Page_query_res, getFlowList } from '@/comm/request';
+import { T_page_query_res, getFlowList } from '@/comm/request';
 import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -47,7 +47,7 @@ const pageData = reactive({
   tableData: {
     total: 0,
     page_no: 1
-  } as T_Page_query_res<I_Flow>,
+  } as T_page_query_res<I_Flow>,
 })
 
 const flashSub = flashFlowList.subscribe(async () => {

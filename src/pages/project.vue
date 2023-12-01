@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
-import { T_Page_query_res, deleteProject, getProjectList } from '@/comm/request';
+import { T_page_query_res, deleteProject, getProjectList } from '@/comm/request';
 import { createDiscreteApi } from 'naive-ui';
 import { onBeforeUnmount, reactive } from 'vue';
 import { useRouter } from 'vue-router';
@@ -52,7 +52,7 @@ const pageData = reactive({
   tableData: {
     total: 0,
     page_no: 1
-  } as T_Page_query_res<I_Project>,
+  } as T_page_query_res<I_Project>,
 })
 
 const flashSubscribe = flashProjectList.subscribe(async () => {
