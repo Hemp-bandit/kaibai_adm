@@ -40,7 +40,7 @@
 import { I_Project } from '@/comm/entity';
 import { T_Page_query_res, deleteProject, getProjectList } from '@/comm/request';
 import { createDiscreteApi } from 'naive-ui';
-import { onBeforeUnmount, onMounted, reactive } from 'vue';
+import { onBeforeUnmount, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import createProject, { openOrCloseCreateProjectDialog } from './dialog/createProject.vue';
 

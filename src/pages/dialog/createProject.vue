@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Subject } from 'rxjs'
+import { Subject } from 'rxjs';
 export const openOrCloseCreateProjectDialog = new Subject<boolean>();
 </script>
 
@@ -30,12 +30,7 @@ import { I_Project } from '@/comm/entity';
 import { createProject } from '@/comm/request';
 import { tryOnScopeDispose } from '@vueuse/core';
 import { createDiscreteApi } from 'naive-ui';
-// import { Subject } from 'rxjs';
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
-// const openOrCloseCreateProjectDialog = new Subject<boolean>();
-// const showModal = useSubject(openOrCloseCreateProjectDialog)
-
-
+import { onBeforeUnmount, reactive, ref } from 'vue';
 const showModal = ref(false);
 const formValue = reactive<Pick<I_Project, 'name'>>({ name: '' });
 const rules = reactive({
@@ -48,16 +43,11 @@ const rules = reactive({
 
 
 onBeforeUnmount(() => {
-  subscribe.unsubscribe()
+  dialogSubscribe.unsubscribe()
 })
 
-const subscribe = openOrCloseCreateProjectDialog.subscribe(modalStatus => {
-console.log(modalStatus)
+const dialogSubscribe = openOrCloseCreateProjectDialog.subscribe(modalStatus => {
   showModal.value = modalStatus
-})
-
-tryOnScopeDispose(() => {
-  subscribe.unsubscribe()
 })
 
 async function handCreateProject() {
