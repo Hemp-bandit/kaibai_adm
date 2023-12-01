@@ -20,8 +20,7 @@
           <td>{{ ele.update_time }}</td>
           <td>
             <n-space>
-              <n-button type="primary">查看流程</n-button>
-              <n-button type="warning">重命名</n-button>
+              <n-button type="primary" @click="checkFlow(ele.id)">查看流程</n-button>
               <n-button type="error" @click="delProject(ele.id)"> 删除项目</n-button>
             </n-space>
           </td>
@@ -37,17 +36,19 @@
 </template>
 
 <script lang="ts">
-const flashList = new Subject<null>();
+import { Subject } from 'rxjs';
+const flashProjectList = new Subject<null>();
 </script>
 
 <script lang="ts" setup>
 import { I_Project } from '@/comm/entity';
 import { T_Page_query_res, deleteProject, getProjectList } from '@/comm/request';
 import { createDiscreteApi } from 'naive-ui';
-import { Subject } from 'rxjs';
-import { onMounted, reactive } from 'vue';
+import { onBeforeUnmount, onMounted, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import createProject, { openOrCloseCreateProjectDialog } from './dialog/createProject.vue';
 
+const router = useRouter();
 const pageData = reactive({
   tableData: {
     total: 0,
@@ -57,26 +58,25 @@ const pageData = reactive({
 
 
 onMounted(async () => {
-  flashList.next(null)
+  flashProjectList.next(null);
 })
+
+flashProjectList
+  .subscribe(async () => {
+    const { data: { data } } = await getProjectList({ offset: pageData.tableData.page_no, size: 10 });
+    const count = Math.ceil(data.total / data.page_size);
+    data.total = count < 0 ? 1 : count
+    pageData.tableData = data;
+  })
+
 
 openOrCloseCreateProjectDialog.subscribe(async status => {
   if (!status) {
     pageData.tableData.page_no = 1;
-    flashList.next(null)
+    flashProjectList.next(null)
   }
 })
 
-flashList.subscribe(async () => {
-  await getProject()
-})
-
-async function getProject() {
-  const { data: { data } } = await getProjectList({ offset: pageData.tableData.page_no, size: 10 });
-  const count = Math.ceil(data.total / data.page_size);
-  data.total = count < 0 ? 1 : count
-  pageData.tableData = data;
-}
 
 function onCarateProject() {
   openOrCloseCreateProjectDialog.next(true)
@@ -84,7 +84,7 @@ function onCarateProject() {
 
 async function pageUpdate(page: number) {
   pageData.tableData.page_no = page;
-  flashList.next(null)
+  flashProjectList.next(null)
 }
 
 async function delProject(id: number) {
@@ -98,7 +98,7 @@ async function delProject(id: number) {
       try {
         const { data: { rsp_msg } } = await deleteProject({ id });
         message.success(rsp_msg);
-        flashList.next(null)
+        flashProjectList.next(null)
       } catch (error) {
         message.error(error)
       }
@@ -109,5 +109,8 @@ async function delProject(id: number) {
 
 }
 
+async function checkFlow(projectId: number) {
+  router.push({ name: 'flow', query: { projectId } })
+}
+
 </script>
-<style scoped lang="less"></style>@/comm/request

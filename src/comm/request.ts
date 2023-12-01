@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { I_Project } from './entity';
+import { I_Flow, I_Project } from './entity';
 
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8080/api"
@@ -32,7 +32,9 @@ export type T_Page_query_res<T> = {
   do_count: boolean,
 }
 
-
+export type T_flow_page_query = {
+  project_id: number
+}
 
 export async function getProjectList(data: T_Page_query) {
   type rsp = T_Basic_rsp<T_Page_query_res<I_Project>>
@@ -45,4 +47,9 @@ export async function createProject(data: Pick<I_Project, 'name'>) {
 
 export async function deleteProject(data: Pick<I_Project, 'id'>) {
   return await instance.delete<T_Basic_rsp<string>>('/project/delete_project', { data })
+}
+
+export async function getFlowList(data: T_flow_page_query) {
+  type rsp = T_Basic_rsp<T_Page_query_res<I_Flow>>
+  return await instance.post<rsp>('/flow/get_flow_list', data)
 }

@@ -5,7 +5,7 @@ const route = createRouter({
     {
       path: "/project",
       name: "project",
-      component: () => import('./pages/project.vue')
+      component: () => import('./pages/project.vue'),
     },
     {
       path: "/flow",
