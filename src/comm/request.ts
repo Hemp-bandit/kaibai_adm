@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { I_Flow, I_Project } from './entity';
+import { executeSubject } from '@/pages/createFlow.vue';
 
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8080/api"
@@ -71,15 +72,14 @@ export async function getFLowDetail(data: { id: string }) {
 
 
 export async function executeShell(data: { id: string }) {
-  const eventSource = new EventSource(`http://127.0.0.1:8080/api/flow/execute?id=${data.id}`);
-
-  eventSource.onmessage = function(event) {
-    console.log('%c [ event ]-77-「request.ts」', 'font-size:13px; background:pink; color:#bf2c9f;', event);
-    console.log(event.data);
-  };
-  
-  eventSource.onerror = function(error) {
-    console.error('Error occurred:', error);
-  };
-
+  await instance.get(`/flow/execute?id=${data.id}`, {
+    responseType: 'stream',
+    onDownloadProgress: progressEvent => {
+      const xhr = progressEvent.event.target
+      const { responseText } = xhr
+      console.log("=====responseText======")
+      console.log(responseText)
+      executeSubject.next(responseText)
+    }
+  });
 }

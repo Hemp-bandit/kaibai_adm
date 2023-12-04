@@ -16,7 +16,11 @@
   </n-space>
 </template>
 
+<script lang="ts">
+import { Subject } from 'rxjs'
+export const executeSubject = new Subject<string>()
 
+</script>
 <script lang="ts" setup >
 import { T_create_flow, createFlow, updateFlow, executeShell } from '@/comm/request';
 import * as monaco from 'monaco-editor';
@@ -55,9 +59,14 @@ onMounted(async () => {
   }
 })
 
+const executeSubjectSub = executeSubject.subscribe(data => {
+  editor.setValue(data + "\n")
+})
+
 onBeforeUnmount(() => {
   editor.dispose()
   editor = undefined;
+  executeSubjectSub.unsubscribe()
 })
 
 const formValue = reactive<T_create_flow>({
@@ -84,13 +93,12 @@ async function initFLowData() {
 }
 
 async function execute() {
-try {
-    const data = await executeShell({ id: query.flowId });
-    console.log('%c [ data  ]-88-「createFlow.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', data);
-} catch (error) {
-  console.log('%c [ error ]-91-「createFlow.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', error);
-  
-}
+  try {
+    await executeShell({ id: query.flowId });
+  } catch (error) {
+    console.log('%c [ error ]-99-「createFlow.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', error);
+
+  }
 }
 
 async function handCreateProject() {
