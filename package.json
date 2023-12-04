@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "webpack serve --mode=development "
+    "dev": "webpack serve --mode=development ",
+    "build": "npx webpack build "
   },
   "keywords": [],
   "author": "",

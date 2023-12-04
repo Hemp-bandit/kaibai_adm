@@ -2,8 +2,11 @@ import axios, { AxiosResponse } from 'axios';
 import { I_Flow, I_Project } from './entity';
 import { executeSubject } from '@/pages/createFlow.vue';
 
+// @ts-ignore
+const isDev = process.env.NODE_ENV === "development"
+
 const instance = axios.create({
-  baseURL: "http://127.0.0.1:8080/api"
+  baseURL: isDev ? 'http://127.0.0.1:8080/api' : '/api'
 })
 
 instance.interceptors.response.use(function (value: AxiosResponse<T_basic_rsp<any>>) {
