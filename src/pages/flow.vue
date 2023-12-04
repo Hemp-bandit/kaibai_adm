@@ -21,6 +21,7 @@
           <td>
             <n-space>
               <n-button type="primary" @click="editFlow(ele.id)">编辑流程</n-button>
+              <n-button type="primary" @click="executeFlow(ele.id)">执行流程</n-button>
               <n-button type="error" @click="delFlow(ele.id)">删除流程</n-button>
             </n-space>
           </td>
@@ -32,6 +33,7 @@
 
 <script lang="ts">
 import { Subject } from 'rxjs';
+import { Flow_Status } from '@/comm';
 
 export const flashFlowList = new Subject<null>();
 </script>
@@ -46,7 +48,7 @@ const query = useRoute().query as { projectId?: string }
 const pageData = reactive({
   tableData: {
     total: 0,
-    page_no: 1
+    page_no: 1,
   } as T_page_query_res<I_Flow>,
 })
 
@@ -67,22 +69,25 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  // 页面退出时完成subject.避免重复订阅
   flashSub.unsubscribe();
 })
 
 async function editFlow(id: number) {
-
+  router.push({ name: 'createFlow', query: { ...query, status: Flow_Status.EDIT, flowId: id } })
 }
 
 async function delFlow(id: number) {
 }
 
 function onCarateFlow() {
-  router.push({ name: 'createFlow', query })
+  router.push({ name: 'createFlow', query: { ...query, status: Flow_Status.CREATE } })
 }
 
 async function pageUpdate(page: number) {
   pageData.tableData.page_no = page;
+}
+
+async function executeFlow(id: number) {
+  router.push({ name: 'createFlow', query: { ...query, status: Flow_Status.EXECUTE, flowId: id } })
 }
 </script>

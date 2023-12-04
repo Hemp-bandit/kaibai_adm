@@ -37,6 +37,7 @@ export type T_flow_page_query = {
 }
 
 export type T_create_flow = T_flow_page_query & Pick<I_Flow, 'shell_str'> & { flow_name: string }
+export type T_update_flow = Pick<I_Flow, 'shell_str' | "id"> & { flow_name: string }
 
 
 export async function getProjectList(data: T_page_query) {
@@ -59,4 +60,26 @@ export async function getFlowList(data: T_flow_page_query) {
 
 export async function createFlow(data: T_create_flow) {
   return await instance.post<T_basic_rsp<string>>('/flow/create_flow', data);
+}
+export async function updateFlow(data: T_update_flow) {
+  return await instance.post<T_basic_rsp<string>>('/flow/update_flow', data);
+}
+
+export async function getFLowDetail(data: { id: string }) {
+  return await instance.get<T_basic_rsp<I_Flow>>(`/flow/get_detail?id=${data.id}`);
+}
+
+
+export async function executeShell(data: { id: string }) {
+  const eventSource = new EventSource(`http://127.0.0.1:8080/api/flow/execute?id=${data.id}`);
+
+  eventSource.onmessage = function(event) {
+    console.log('%c [ event ]-77-「request.ts」', 'font-size:13px; background:pink; color:#bf2c9f;', event);
+    console.log(event.data);
+  };
+  
+  eventSource.onerror = function(error) {
+    console.error('Error occurred:', error);
+  };
+
 }
