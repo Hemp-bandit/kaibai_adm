@@ -12,6 +12,7 @@
     <n-space>
       <n-button type="primary" @click="handCreateProject" v-if="+query.status !== Flow_Status.EXECUTE">确认</n-button>
       <n-button type="error" @click="handCancel">取消</n-button>
+      <n-button type="info" @click="execute" v-if="+query.status === Flow_Status.EXECUTE">重试</n-button>
     </n-space>
   </n-space>
 </template>
@@ -60,8 +61,7 @@ onMounted(async () => {
 })
 
 const executeSubjectSub = executeSubject.subscribe(data => {
-  console.log('%c [ data ]-63-「createFlow.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', data);
-  editor.setValue(data + "\n")
+  editor.setValue(data)
 })
 
 onBeforeUnmount(() => {
@@ -149,6 +149,6 @@ function drop() {
 
 <style>
 #editor {
-  min-height: 30vh;
+  min-height: 70vh;
 }
 </style>
