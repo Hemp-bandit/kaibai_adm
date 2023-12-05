@@ -34,13 +34,14 @@
 <script lang="ts">
 import { Subject } from 'rxjs';
 import { Flow_Status } from '@/comm';
+import { createDiscreteApi } from 'naive-ui';
 
 export const flashFlowList = new Subject<null>();
 </script>
 
 <script lang="ts" setup>
 import { I_Flow } from '@/comm/entity';
-import { T_page_query_res, getFlowList } from '@/comm/request';
+import { T_page_query_res, deleteFlow, getFlowList } from '@/comm/request';
 import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -77,6 +78,14 @@ async function editFlow(id: number) {
 }
 
 async function delFlow(id: number) {
+  const { message } = createDiscreteApi(['message']);
+  try {
+    await deleteFlow({ id })
+    message.success("删除流程成功")
+    flashFlowList.next(null)
+  } catch (error) {
+    message.success("删除流程失败")
+  }
 }
 
 function onCarateFlow() {
