@@ -60,6 +60,7 @@ onMounted(async () => {
 })
 
 const executeSubjectSub = executeSubject.subscribe(data => {
+  console.log('%c [ data ]-63-「createFlow.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', data);
   editor.setValue(data + "\n")
 })
 
@@ -84,6 +85,7 @@ const rules = reactive({
 })
 
 async function initFLowData() {
+  if (!query.flowId) return;
   const { data: { data } } = await getFLowDetail({ id: query.flowId });
   nextTick(() => {
     formValue.flow_name = data.name;

@@ -6,7 +6,7 @@ import { executeSubject } from '@/pages/createFlow.vue';
 const isDev = process.env.NODE_ENV === "development"
 
 const instance = axios.create({
-  baseURL: isDev ? 'http://127.0.0.1:8080/api' : '/api'
+  baseURL: isDev ? 'http://localhost:8081/api' : '/api'
 })
 
 instance.interceptors.response.use(function (value: AxiosResponse<T_basic_rsp<any>>) {
@@ -80,8 +80,6 @@ export async function executeShell(data: { id: string }) {
     onDownloadProgress: progressEvent => {
       const xhr = progressEvent.event.target
       const { responseText } = xhr
-      console.log("=====responseText======")
-      console.log(responseText)
       executeSubject.next(responseText)
     }
   });

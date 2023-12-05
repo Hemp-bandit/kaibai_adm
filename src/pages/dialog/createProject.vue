@@ -52,10 +52,11 @@ const dialogSubscribe = openOrCloseCreateProjectDialog.subscribe(modalStatus => 
 async function handCreateProject() {
   const { message } = createDiscreteApi(['message']);
   try {
-    await createProject(this.formValue);
+    await createProject(formValue);
     message.success('创建项目成功!');
     openOrCloseCreateProjectDialog.next(false)
   } catch (error) {
+    console.log('%c [ error ]-59-「createProject.vue」', 'font-size:13px; background:pink; color:#bf2c9f;', error);
     message.error(error)
   }
 }
