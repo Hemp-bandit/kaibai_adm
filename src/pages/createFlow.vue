@@ -18,19 +18,18 @@
 </template>
 
 <script lang="ts">
-import { Subject } from 'rxjs'
+import { Subject } from 'rxjs';
 export const executeSubject = new Subject<string>()
 
 </script>
 <script lang="ts" setup >
-import { T_create_flow, createFlow, updateFlow, executeShell } from '@/comm/request';
+import { Flow_Status } from '@/comm';
+import { T_create_flow, createFlow, executeShell, getFLowDetail, updateFlow } from '@/comm/request';
 import * as monaco from 'monaco-editor';
 import { FormInst, createDiscreteApi } from 'naive-ui';
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { flashFlowList } from './flow.vue';
-import { Flow_Status } from '@/comm';
-import { getFLowDetail } from "@/comm/request"
 const formRef = ref<FormInst | null>(null)
 const query = useRoute().query as unknown as { projectId?: string, status: Flow_Status, flowId: string }
 const router = useRouter();
@@ -138,11 +137,11 @@ async function handCreateProject() {
 }
 
 function handCancel() {
-  drop();
+  dispose();
   router.replace({ name: "flow", query: { projectId: query.projectId } })
 }
 
-function drop() {
+function dispose() {
   formValue.flow_name = ''
 }
 </script>

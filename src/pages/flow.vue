@@ -64,6 +64,7 @@ const router = useRouter();
 onMounted(() => {
   if (!query.projectId) {
     router.replace({ name: "project" })
+    return;
   }
 
   flashFlowList.next(null)
@@ -90,10 +91,6 @@ async function delFlow(id: number) {
 
 function onCarateFlow() {
   router.push({ name: 'createFlow', query: { ...query, status: Flow_Status.CREATE } })
-}
-
-async function pageUpdate(page: number) {
-  pageData.tableData.page_no = page;
 }
 
 async function executeFlow(id: number) {

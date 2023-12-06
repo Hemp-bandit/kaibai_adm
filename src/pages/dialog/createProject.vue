@@ -1,6 +1,6 @@
 <template>
   <div>
-    <n-modal v-model:show="showModal" :auto-focus="true" :close-on-esc="true" :on-after-leave="drop">
+    <n-modal v-model:show="showModal" :auto-focus="true" :close-on-esc="true" :on-after-leave="dispose">
       <n-card style="width: 600px" title="创建项目" :bordered="false" size="huge" role="dialog" aria-modal="true">
 
         <n-form ref="formRef" inline :label-width="80" :model="formValue" :rules="rules" size="medium">
@@ -62,11 +62,11 @@ async function handCreateProject() {
 }
 
 function handCancel() {
-  drop()
+  dispose()
   openOrCloseCreateProjectDialog.next(false)
 }
 
-function drop() {
+function dispose() {
   formValue.name = ''
 }
 
