@@ -8,11 +8,12 @@
 
     <div id="editor"></div>
 
-
     <n-space>
-      <n-button type="primary" @click="handCreateProject" v-if="+query.status !== Flow_Status.EXECUTE">确认</n-button>
+      <n-button type="info" @click="execute" v-if="+query.status === Flow_Status.EXECUTE" color="#092635">执行</n-button>
+      <n-button type="info" @click="execute" v-if="+query.status === Flow_Status.EXECUTE" color="#1B4242">重试</n-button>
+      <n-button type="primary" @click="handCreateProject" v-if="+query.status !== Flow_Status.EXECUTE"
+        color="#750E21">确认</n-button>
       <n-button type="error" @click="handCancel">取消</n-button>
-      <n-button type="info" @click="execute" v-if="+query.status === Flow_Status.EXECUTE">重试</n-button>
     </n-space>
   </n-space>
 </template>
@@ -47,19 +48,15 @@ onMounted(async () => {
     });
   }
 
-  switch (+query.status) {
-    case Flow_Status.CREATE:
-    case Flow_Status.EDIT:
-      await initFLowData();
-      break;
-    case Flow_Status.EXECUTE:
-      await execute();
-    default:
-      break;
-  }
+  await initFLowData();
+
 })
 
 const executeSubjectSub = executeSubject.subscribe(data => {
+  if (data.includes("exit")) {
+    const { message } = createDiscreteApi(['message']);
+    message.success("流程执行完毕!")
+  }
   editor.setValue(data)
 })
 

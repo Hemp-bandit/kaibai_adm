@@ -82,7 +82,7 @@ export async function executeShell(data: { id: string }) {
     responseType: 'stream',
     onDownloadProgress: progressEvent => {
       const xhr = progressEvent.event.target
-      const { responseText } = xhr
+      const { responseText } = xhr as { responseText: string }
       executeSubject.next(responseText)
     }
   });

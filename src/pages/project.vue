@@ -69,9 +69,9 @@ const dialogSubscribe = openOrCloseCreateProjectDialog.subscribe(async status =>
     flashProjectList.next(null)
   }
 })
-
+// 将dialog的订阅合并到刷新列表的订阅中.在组件退出时统一释放
+flashSubscribe.add(dialogSubscribe)
 onBeforeUnmount(() => {
-  dialogSubscribe.unsubscribe()
   flashSubscribe.unsubscribe()
 })
 
