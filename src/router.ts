@@ -14,9 +14,30 @@ const route = createRouter({
                     component: () => import("@/pages/dashboard.vue"),
                     name: "Dashboard",
                     meta: {
-                        title: "首页",
-                        svgIcon: "dashboard",
-                        affix: true,
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: "user",
+                    component: () => import("@/pages/user/user.vue"),
+                    name: "user",
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: "role",
+                    component: () => import("@/pages/role/role.vue"),
+                    name: "role",
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: "access",
+                    component: () => import("@/pages/access/access.vue"),
+                    name: "access",
+                    meta: {
                         requiresAuth: true
                     }
                 },
