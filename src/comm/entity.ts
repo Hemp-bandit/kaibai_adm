@@ -1,12 +1,25 @@
-interface I_Basic_Entity {
-  id: number,
-  create_time: string
-  update_time: string
+export interface LoginData {
+    name: string;
+    password: string;
 }
 
-export interface I_Project extends I_Basic_Entity {
-  name: string
+export interface UserData {
+    id: number;
+    create_time: string;
+    update_time: string;
+    name: string;
+    password: string;
+    phone: string;
+    picture: string;
+    introduce: string;
+    user_type: number;
+    status: number;
 }
-export interface I_Flow extends I_Basic_Entity, Pick<I_Project, 'name'> {
-  shell_str: string
+
+export interface ListResponse<T> {
+    records: Array<T>;
+    total: number;
+    page_no: number;
+    page_size: number;
+    do_count: boolean;
 }
