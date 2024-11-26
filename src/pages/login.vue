@@ -1,13 +1,12 @@
 <template>
   <div class='login'>
-
     <n-form
-        ref="formRef"
         inline
-        :label-width="120"
         :model="login_info"
         :rules="rules"
         size="medium"
+        label-align="left"
+        label-placement="left"
     >
       <n-form-item label="姓名" path="name">
         <n-input v-model:value="login_info.name" type="text" placeholder="请输入用户名"/>
@@ -26,12 +25,11 @@
 
 <script lang="ts" setup>
 import {reactive} from "vue";
-import {Login_data} from "@/comm/entity";
+import {LoginData} from "@/comm/entity";
 import login_tool from "@/comm/login_tool";
-import {useMessage} from "naive-ui";
 import {useRouter} from "vue-router";
 
-let login_info = reactive<Login_data>({
+let login_info = reactive<LoginData>({
   name: "",
   password: "",
 });

@@ -1,4 +1,4 @@
-import {FileTrayFull} from '@vicons/ionicons5'
+import {FileTrayFull,} from '@vicons/ionicons5'
 import type {MenuOption} from 'naive-ui'
 import {NIcon} from 'naive-ui'
 import {Component, h} from 'vue'

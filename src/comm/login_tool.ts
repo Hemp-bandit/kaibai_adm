@@ -1,4 +1,4 @@
-import {Login_data} from "@/comm/entity";
+import {LoginData} from "@/comm/entity";
 import instance, {T_basic_rsp} from "@/comm/request";
 
 
@@ -18,7 +18,7 @@ class LoginTool {
         sessionStorage.setItem(this.login_key, jwt_token);
     }
 
-    async login_remote(data: Login_data) {
+    async login_remote(data: LoginData) {
         const login_res = await instance.post("/auth/login", data) as T_basic_rsp<string>;
         this.save_login_info(login_res.data);
     }
