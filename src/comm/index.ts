@@ -1,7 +1,19 @@
-export enum Flow_Status {
-    EDIT,
-    CREATE,
-    EXECUTE
+export enum UserType {
+    BIZ,
+    CLIENT,
+}
+
+export function UserTypeToOption(){
+    return [
+        {
+            label: '商家',
+            value: UserType.BIZ
+        },
+        {
+            label: "用户",
+            value: UserType.CLIENT
+        }
+    ]
 }
 
 export function checkPhone(phone: string) {

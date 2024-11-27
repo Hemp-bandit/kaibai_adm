@@ -1,3 +1,5 @@
+import {UserType} from "@/comm/index";
+
 export interface T_basic_rsp<T> {
     code: number,
     msg: string,
@@ -15,7 +17,7 @@ export interface UserData {
     phone: string;
     picture: string;
     introduce: string;
-    user_type: number;
+    user_type: UserType;
     status: number;
 }
 

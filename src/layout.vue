@@ -3,7 +3,7 @@
     <n-layout-header style="height: 64px; padding: 24px" bordered>
       <n-h2>kaibai admin</n-h2>
     </n-layout-header>
-    <n-layout position="absolute" style="top: 64px; bottom: 64px" has-sider>
+    <n-layout position="absolute" style="top: 64px" has-sider>
       <n-layout-sider content-style="padding: 24px;" :native-scrollbar="false" bordered>
         <n-menu :options="menuOptions" />
       </n-layout-sider>
@@ -11,9 +11,9 @@
         <RouterView />
       </n-layout>
     </n-layout>
-    <n-layout-footer position="absolute" style="height: 64px; padding: 24px" bordered>
-      footer
-    </n-layout-footer>
+<!--    <n-layout-footer position="absolute" style="height: 64px; padding: 24px" bordered>-->
+<!--      footer-->
+<!--    </n-layout-footer>-->
   </n-layout>
 </template>
 
