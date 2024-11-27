@@ -1,3 +1,9 @@
+export interface T_basic_rsp<T> {
+    code: number,
+    msg: string,
+    data: T
+}
+
 export interface LoginData {
     name: string;
     password: string;
@@ -22,4 +28,9 @@ export interface ListResponse<T> {
     page_no: number;
     page_size: number;
     do_count: boolean;
+}
+
+export interface ListReqData {
+    page_no: number;
+    take: number;
 }

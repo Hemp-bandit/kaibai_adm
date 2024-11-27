@@ -1,28 +1,14 @@
 import axios, {AxiosResponse} from 'axios';
 import {createDiscreteApi} from "naive-ui";
 import login_tool from "@/comm/login_tool";
-import router from "@/router";
 
 const instance = axios.create({
-    baseURL: "http://1.94.186.245:30000/api"
+    baseURL: "http://localhost:3000/api"//"http://1.94.186.245:30000/api"
 })
-
-export interface T_basic_rsp<T> {
-    code: number,
-    msg: string,
-    data: T
-}
+const is_login = login_tool.check_is_login_local();
+instance.defaults.headers.common['Authorization'] = `Bearer ${login_tool.login_token}`;
 
 const msg = createDiscreteApi(['message']);
-
-instance.interceptors.request.use(config => {
-    const is_login = login_tool.check_is_login_local();
-    if (!is_login) {
-        router.replace("/login");
-    }
-    config.headers.Authorization = `Bearer ${login_tool.login_token}`;
-    return config;
-})
 
 instance.interceptors.response.use(function (value: AxiosResponse) {
     if (value?.data?.code !== 0) {
@@ -32,5 +18,6 @@ instance.interceptors.response.use(function (value: AxiosResponse) {
     return Promise.resolve(value.data);
 });
 
-
 export default instance;
+
+
