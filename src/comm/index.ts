@@ -1,9 +1,13 @@
+export enum ALL {
+    ALL = "all"
+}
+
 export enum UserType {
     BIZ,
     CLIENT,
 }
 
-export function UserTypeToOption(){
+export function UserTypeToOption() {
     return [
         {
             label: '商家',
@@ -13,6 +17,15 @@ export function UserTypeToOption(){
             label: "用户",
             value: UserType.CLIENT
         }
+    ]
+}
+export function UserTypeToOption_All() {
+    return [
+        {
+            label: '全部',
+            value: ALL.ALL
+        },
+        ... UserTypeToOption()
     ]
 }
 

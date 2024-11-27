@@ -12,7 +12,10 @@
           <n-form-item label="用户名称" path="name">
             <n-input v-model:value="search_form.name" type="text" placeholder="请输入用户名称" clearable/>
           </n-form-item>
-          <n-form-item>
+          <n-form-item label="用户类型:" path="user_type">
+            <n-select style="width: 100px" v-model:value="search_form.user_type" :options="options"/>
+          </n-form-item>
+          <n-form-item >
             <n-button @click="search" type="info">搜索</n-button>
           </n-form-item>
         </n-form>
@@ -66,27 +69,32 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, useTemplateRef} from 'vue'
+import {computed, onMounted, ref, useTemplateRef} from 'vue'
 import {UserData} from "@/comm/entity";
 import {delete_user, get_user_list, UserListReqData} from "@/api/user_api";
 import create_update_user from './create_update_user.vue'
-import {UserType} from "@/comm";
+import {ALL, UserType, UserTypeToOption_All} from "@/comm";
 import _ from "lodash";
 import {createDiscreteApi, useMessage} from "naive-ui";
 
 const user_ref = useTemplateRef("user_ref");
 
-let search_form = ref({
+let search_form = ref<UserListReqData>({
   name: "",
+  user_type: ALL.ALL,
   page_no: 1,
   take: 10,
   total: 0,
 })
 let user_list = ref<Array<UserData>>([])
+const options = computed(() => UserTypeToOption_All())
+
 
 async function search() {
+  let {user_type} = search_form.value
   const req_data: UserListReqData = {
     name: search_form.value.name || null,
+    user_type: user_type === ALL.ALL ? null : user_type,
     page_no: search_form.value.page_no,
     take: search_form.value.take
   }
@@ -99,6 +107,7 @@ onMounted(async () => {
   await search();
 })
 const message = createDiscreteApi(['message']).message;
+
 async function pageUpdate(val: number) {
   search_form.value.page_no = val;
   await search();
