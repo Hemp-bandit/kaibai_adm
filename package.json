@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "webpack serve --mode=development ",
-    "build": "npx webpack build "
+    "build": "npx webpack build --mode=production"
   },
   "keywords": [],
   "author": "",
