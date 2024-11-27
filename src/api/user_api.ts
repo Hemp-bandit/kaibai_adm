@@ -8,3 +8,7 @@ export interface UserListReqData extends ListReqData {
 export async function get_user_list(data: UserListReqData) {
     return await instance.post<any, T_basic_rsp<ListResponse<UserData>>>('/user/get_user_list', data)
 }
+
+export async function create_user(data: Pick<UserData, "name" | "phone" | "password">) {
+    return await instance.post<any, T_basic_rsp<string>>('/user/create_user', data)
+}

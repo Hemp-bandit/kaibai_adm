@@ -4,10 +4,7 @@ export interface T_basic_rsp<T> {
     data: T
 }
 
-export interface LoginData {
-    name: string;
-    password: string;
-}
+export type LoginData = Pick<UserData, "name" | "password">
 
 export interface UserData {
     id: number;
