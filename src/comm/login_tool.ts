@@ -1,7 +1,14 @@
-import {LoginData, T_basic_rsp} from "@/comm/entity";
+import { LoginData, T_basic_rsp } from "@/comm/entity";
 import instance from "@/comm/request";
 import route from "@/router";
+import { useUserStore } from "@/store/user_store";
 
+
+export interface UserLoginData {
+    id: number,
+    name: string,
+    token: string,
+}
 
 class LoginTool {
     public is_login: boolean = false
@@ -20,8 +27,10 @@ class LoginTool {
     }
 
     async login_remote(data: LoginData) {
-        const login_res = await instance.post<any, T_basic_rsp<string>>("/auth/login", data);
-        this.save_login_info(login_res.data);
+        const login_res = await instance.post<any, T_basic_rsp<UserLoginData>>("/auth/login", data);
+        this.save_login_info(login_res.data.token);
+        const store = useUserStore();
+        store.update_user(login_res.data);
     }
 
     log_out() {

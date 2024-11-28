@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {menuOptions} from './comm/menus';
+import {menuOptions} from '../comm/menus';
 import login_tool from "@/comm/login_tool";
 
 function logout() {

@@ -8,9 +8,12 @@ import naive from 'naive-ui'
 import 'vfonts/Lato.css'
 // 等宽字体
 import 'vfonts/FiraCode.css'
+import { createPinia } from 'pinia'
 
+const pinia = createPinia()
 createApp(App)
-  .use(naive)
-  .use(route)
-  .mount('#app');
+    .use(naive)
+    .use(route)
+    .use(pinia)
+    .mount('#app');
 

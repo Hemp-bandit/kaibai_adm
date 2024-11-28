@@ -1,6 +1,6 @@
 import {createRouter, createWebHashHistory, createWebHistory,} from 'vue-router';
 import login_tool from './comm/login_tool';
-import layout from './layout.vue'
+import layout from './pages/layout.vue'
 
 const route = createRouter({
     routes: [
