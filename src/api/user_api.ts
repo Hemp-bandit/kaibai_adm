@@ -1,6 +1,6 @@
-import {ListReqData, ListResponse, T_basic_rsp, UserData} from "@/comm/entity";
+import { ListReqData, ListResponse, T_basic_rsp, UserData } from "@/comm/entity";
 import instance from "@/comm/request";
-import {ALL, UserType} from "@/comm";
+import { ALL, UserType } from "@/comm";
 
 export interface UserListReqData extends ListReqData {
     name?: string,
@@ -8,7 +8,7 @@ export interface UserListReqData extends ListReqData {
     total: number;
 }
 
-export async function get_user_list(data: UserListReqData) {
+export async function get_user_list(data: Omit<UserListReqData, "total">) {
     return await instance.post<any, T_basic_rsp<ListResponse<UserData>>>('/user/get_user_list', data)
 }
 

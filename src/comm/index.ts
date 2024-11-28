@@ -7,6 +7,12 @@ export enum UserType {
     CLIENT,
 }
 
+export enum ModuleMode{
+    CREATE,
+    UPDATE
+}
+
+
 export function UserTypeToOption() {
     return [
         {

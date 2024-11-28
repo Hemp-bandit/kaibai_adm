@@ -1,54 +1,43 @@
 <template>
   <n-modal v-model:show="showModal" :on-after-leave="close" close-on-esc display-directive="if" preset="card"
-           style="width: 600px">
-    <n-form
-        :model="user_info"
-        :rules="rules"
-        size="medium"
-        label-width="100px"
-        label-align="left"
-        label-placement="left"
-    >
+    style="width: 600px">
+    <n-form :model="user_info" :rules="rules" size="medium" label-width="100px" label-align="left"
+      label-placement="left">
       <n-form-item label="用户名称:" path="name">
-        <n-input v-model:value="user_info.name" type="text" maxlength="30" placeholder="请输入用户名称" clearable
-                 show-count/>
+        <n-input v-model:value="user_info.name" type="text" maxlength="30" placeholder="请输入用户名称" clearable show-count />
       </n-form-item>
-      <n-form-item label="密码:" path="password" v-if="mode=== MODE.CREATE_USER">
+      <n-form-item label="密码:" path="password" v-if="mode === ModuleMode.CREATE">
         <n-input v-model:value="user_info.password" type="password" maxlength="50" placeholder="请输入密码" show-count
-                 clearable/>
+          clearable />
       </n-form-item>
       <n-form-item label="用户手机号:" path="phone">
         <n-input v-model:value="user_info.phone" type="text" maxlength="11" placeholder="请输入用户手机号" clearable
-                 show-count/>
+          show-count />
       </n-form-item>
       <n-form-item label="用户类型:" path="user_type">
-        <n-select v-model:value="user_info.user_type" :options="options"/>
+        <n-select v-model:value="user_info.user_type" :options="options" />
       </n-form-item>
     </n-form>
 
     <template #footer>
-      <n-button @click="create_user_handler" v-if="mode===MODE.CREATE_USER" type="info">{{ title }}</n-button>
-      <n-button @click="update_user_handler" v-if="mode===MODE.UPDATE_USER" type="info">{{ title }}</n-button>
+      <n-button @click="create_user_handler" v-if="mode === ModuleMode.CREATE" type="info">{{ title }}</n-button>
+      <n-button @click="update_user_handler" v-if="mode === ModuleMode.UPDATE" type="info">{{ title }}</n-button>
     </template>
   </n-modal>
 </template>
 
 <script setup lang="ts">
-import {computed, reactive, ref} from "vue";
-import {createDiscreteApi, FormItemRule} from "naive-ui";
-import {checkPhone, UserType, UserTypeToOption} from "@/comm";
-import {create_user, update_user} from "@/api/user_api";
-import {UserData} from "@/comm/entity";
+import { computed, reactive, ref } from "vue";
+import { createDiscreteApi, FormItemRule } from "naive-ui";
+import { checkPhone, ModuleMode, UserType, UserTypeToOption } from "@/comm";
+import { create_user, update_user } from "@/api/user_api";
+import { UserData } from "@/comm/entity";
 
-enum MODE {
-  CREATE_USER,
-  UPDATE_USER,
-}
 
 let showModal = ref(false);
-let mode = ref(MODE.CREATE_USER);
+let mode = ref(ModuleMode.CREATE);
 
-let title = computed(() => mode.value === MODE.CREATE_USER ? "创建用户" : "更新用户")
+let title = computed(() => mode.value === ModuleMode.CREATE ? "创建用户" : "更新用户")
 const options = computed(() => UserTypeToOption())
 
 // let local_user =
@@ -94,7 +83,7 @@ async function create_user_handler() {
     let res = await create_user(user_info.value);
     msg.message.success(res.msg);
     showModal.value = false;
-    mode.value = MODE.CREATE_USER;
+    mode.value = ModuleMode.CREATE;
     emit('reflash');
   } catch (e) {
     console.error(e);
@@ -103,10 +92,11 @@ async function create_user_handler() {
 
 async function update_user_handler() {
   try {
+    // @ts-ignore
     let res = await update_user(user_info.value);
     msg.message.success(res.msg);
     showModal.value = false;
-    mode.value = MODE.CREATE_USER;
+    mode.value = ModuleMode.CREATE;
     emit('reflash');
   } catch (e) {
     console.error(e);
@@ -115,12 +105,12 @@ async function update_user_handler() {
 
 
 const create_user_fn = () => {
-  mode.value = MODE.CREATE_USER;
+  mode.value = ModuleMode.CREATE;
   showModal.value = true;
 }
 
 const update_user_fn = (new_user: UserData) => {
-  mode.value = MODE.UPDATE_USER;
+  mode.value = ModuleMode.UPDATE;
   user_info.value = new_user;
   showModal.value = true;
 }
@@ -129,5 +119,5 @@ function close() {
   user_info.value = new LocalUser();
 }
 
-defineExpose({create_user_fn, update_user_fn})
+defineExpose({ create_user_fn, update_user_fn })
 </script>
