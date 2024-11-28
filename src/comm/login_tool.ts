@@ -1,5 +1,6 @@
-import {LoginData} from "@/comm/entity";
-import instance, {T_basic_rsp} from "@/comm/request";
+import {LoginData, T_basic_rsp} from "@/comm/entity";
+import instance from "@/comm/request";
+import route from "@/router";
 
 
 class LoginTool {
@@ -19,10 +20,14 @@ class LoginTool {
     }
 
     async login_remote(data: LoginData) {
-        const login_res = await instance.post("/auth/login", data) as T_basic_rsp<string>;
+        const login_res = await instance.post<any, T_basic_rsp<string>>("/auth/login", data);
         this.save_login_info(login_res.data);
     }
 
+    log_out() {
+        sessionStorage.removeItem(this.login_key);
+        route.replace("/");
+    }
 }
 
 const login_tool = new LoginTool();
