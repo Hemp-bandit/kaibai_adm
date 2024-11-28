@@ -1,6 +1,7 @@
-import {createRouter, createWebHashHistory, createWebHistory,} from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory, } from 'vue-router';
 import login_tool from './comm/login_tool';
 import layout from './pages/layout.vue'
+import { useUserStore } from './store/user_store';
 
 const route = createRouter({
     routes: [
@@ -53,7 +54,8 @@ const route = createRouter({
 })
 
 route.beforeEach((to, from,) => {
-    const is_login = login_tool.check_is_login_local();
+    const store = useUserStore();
+    const is_login = login_tool.check_is_login_local(store);
     if (to.meta.requiresAuth && !is_login) {
         return {
             path: '/login',

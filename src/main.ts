@@ -13,7 +13,7 @@ import { createPinia } from 'pinia'
 const pinia = createPinia()
 createApp(App)
     .use(naive)
-    .use(route)
     .use(pinia)
+    .use(route)
     .mount('#app');
 

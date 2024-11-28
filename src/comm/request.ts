@@ -1,6 +1,6 @@
-import axios, {AxiosResponse} from 'axios';
-import {createDiscreteApi} from "naive-ui";
-import login_tool from "@/comm/login_tool";
+import axios, { AxiosResponse } from 'axios';
+import { createDiscreteApi } from "naive-ui";
+import { useUserStore } from '@/store/user_store';
 
 // @ts-ignore
 const isDev = process.env.NODE_ENV === "development"
@@ -10,10 +10,9 @@ const instance = axios.create({
 
 const msg = createDiscreteApi(['message']);
 
-instance.interceptors.request.use(config=>{
-    login_tool.check_is_login_local();
-
-    config.headers.Authorization = `Bearer ${login_tool.login_token}`;
+instance.interceptors.request.use(config => {
+    const store = useUserStore()
+    config.headers.Authorization = `Bearer ${store.user_info.token}`;
     return config
 })
 
