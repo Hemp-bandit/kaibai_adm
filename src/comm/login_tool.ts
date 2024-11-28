@@ -10,16 +10,7 @@ export interface UserLoginData {
     token: string,
 }
 class LoginTool {
-    public is_login: boolean = false
     private login_key: string = "kaibai_adm_login"
-    public login_token: string = ""
-    check_is_login_local(store): boolean {
-        // const session_store = sessionStorage.getItem(this.login_key);
-        const session_store = store.user_info.token;
-        this.is_login = session_store !== null && session_store !== '';
-        this.login_token = session_store;
-        return this.is_login
-    }
 
     async login_remote(data: LoginData): Promise<UserLoginData> {
         const login_res = await instance.post<any, T_basic_rsp<UserLoginData>>("/auth/login", data);
