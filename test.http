@@ -1,0 +1,7 @@
+POST https://iam.cn-east-3.myhuaweicloud.com/v3.0/OS-CREDENTIAL/securitytokens HTTP/1.1
+Host: iam.cn-east-3.myhuaweicloud.com
+Authorization: <Your signed string>
+Content-Type: application/json;charset=UTF-8
+Content-Length: 43
+
+{"path":{},"body":"{\"auth\":{\"identity\":{\"methods\":[\"token\"]}}}","header":{},"query":{},"auth_type":"AK/SK","region_id":"cn-east-3"}

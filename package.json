@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "webpack serve --mode=development ",
-    "build": "npx webpack build "
+    "build": "npx webpack build --mode=production"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +36,7 @@
     "axios": "^1.6.2",
     "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
+    "pinia": "^2.2.7",
     "rxjs": "^7.8.1",
     "vue": "^3.3.9",
     "vue-router": "^4.5.0"
