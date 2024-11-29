@@ -63,9 +63,10 @@
 import { onMounted, ref, useTemplateRef } from "vue";
 import { UserListReqData } from "@/api/user_api";
 import { RoleData } from "@/comm/entity";
-import { get_role_list, GetRoleListReqData } from "@/api/role_api";
+import { deleteRole, get_role_list, GetRoleListReqData, UpdateRoleData } from "@/api/role_api";
 
 import create_update_role from "./create_update_role.vue";
+import { createDiscreteApi } from "naive-ui";
 const role_ref = useTemplateRef("role_ref");
 let search_form = ref<UserListReqData>({
   name: "",
@@ -74,6 +75,10 @@ let search_form = ref<UserListReqData>({
   total: 0,
 })
 let role_list = ref<Array<RoleData>>([])
+
+const msg = createDiscreteApi(['message']).message;
+
+
 onMounted(async () => {
   await search();
 })
@@ -103,10 +108,16 @@ async function create_role_fn() {
 }
 
 async function update_role(role: RoleData) {
-
+  role_ref.value.update(role);
 }
 
 async function delete_role(role_id: number) {
-
+  try {
+    let res = await deleteRole(role_id);
+    msg.success(res.msg);
+    await search()
+  } catch (error) {
+    console.error(error);
+  }
 }
 </script>

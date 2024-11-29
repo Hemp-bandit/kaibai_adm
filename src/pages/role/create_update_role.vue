@@ -9,14 +9,14 @@
     </n-form>
 
     <template #footer>
-      <n-button @click="create_role_handler" v-if="mode === ModuleMode.CREATE" type="info">{{ title }}</n-button>
-      <n-button @click="update_role_handler" v-if="mode === ModuleMode.UPDATE" type="info">{{ title }}</n-button>
+      <n-button @click="role_handler" type="info">{{ title }}</n-button>
     </template>
   </n-modal>
 </template>
 <script lang="ts" setup>
-import { CreateRoleData, creteRole } from '@/api/role_api';
+import { CreateRoleData, creteRole, updateRole } from '@/api/role_api';
 import { ModuleMode } from '@/comm';
+import { RoleData } from '@/comm/entity';
 import { useUserStore } from '@/store/user_store';
 import _ from 'lodash';
 import { createDiscreteApi } from 'naive-ui';
@@ -25,6 +25,7 @@ import { computed, ref } from 'vue';
 class local_role {
   name: string = ""
   create_by: number = 0
+  id: number = 0
 }
 
 let mode = ref(ModuleMode.CREATE);
@@ -42,36 +43,42 @@ const rules = ref({
 
 const user_store = useUserStore();
 function close() {
+  role_info.value = new local_role();
 }
 
 const msg = createDiscreteApi(['message']).message;
 const emit = defineEmits(['reflash'])
 
-async function create_role_handler() {
+async function role_handler() {
   role_info.value.create_by = user_store.user_info.id;
 
   try {
     const data = _.clone(role_info.value);
-    const res = await creteRole(data);
+    const res = mode.value === ModuleMode.CREATE ? await creteRole(data) : await updateRole(data);
     msg.success(res.msg);
     showModal.value = false;
-    mode.value = ModuleMode.CREATE;
     emit('reflash');
   } catch (error) {
     console.log('[ error ] >', error)
   }
-}
-async function update_role_handler() {
 }
 
 function open() {
   showModal.value = true;
   mode.value = ModuleMode.CREATE;
 }
+function update(data: RoleData) {
+  showModal.value = true;
+  mode.value = ModuleMode.UPDATE;
+  role_info.value.name = data.name;
+  role_info.value.create_by = data.create_by.id;
+  role_info.value.id = data.id;
+}
 
 
 defineExpose({
-  open
+  open,
+  update
 })
 
 </script>
