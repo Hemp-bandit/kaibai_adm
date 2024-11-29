@@ -6,6 +6,12 @@
           <n-form-item label="角色名称" path="name">
             <n-input v-model:value="search_form.name" type="text" placeholder="请输入角色名称" clearable />
           </n-form-item>
+
+          <n-form-item label="创建人" path="name">
+            <n-select v-model:value="search_form.create_by" placeholder="搜索创建人" :options="user_opts"
+              style="width: 140px;" clearable />
+          </n-form-item>
+
           <n-form-item>
             <n-button @click="search" type="info">搜索</n-button>
           </n-form-item>
@@ -60,35 +66,54 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef } from "vue";
-import { UserListReqData } from "@/api/user_api";
-import { RoleData } from "@/comm/entity";
 import { deleteRole, get_role_list, GetRoleListReqData } from "@/api/role_api";
+import { get_user_option, UserListReqData } from "@/api/user_api";
+import { RoleData } from "@/comm/entity";
+import { onMounted, ref, useTemplateRef } from "vue";
 
-import create_update_role from "./create_update_role.vue";
+import { arrayDataToOption, OPTION } from "@/comm";
 import { createDiscreteApi } from "naive-ui";
+import create_update_role from "./create_update_role.vue";
 const role_ref = useTemplateRef("role_ref");
 let search_form = ref<UserListReqData>({
   name: "",
+  create_by: null,
   page_no: 1,
   take: 10,
   total: 0,
 })
-let role_list = ref<Array<RoleData>>([])
+
+const role_list = ref<Array<RoleData>>([])
+const user_opts = ref<Array<OPTION<number>>>([])
+
 
 const msg = createDiscreteApi(['message']).message;
 
 
 onMounted(async () => {
-  await search();
+
+  await Promise.all([
+    search(),
+    handleSearch()
+  ])
 })
+
+async function handleSearch() {
+  try {
+    let opt = await get_user_option();
+    user_opts.value = arrayDataToOption(opt.data)
+  } catch (error) {
+
+  }
+}
 
 async function search() {
   const value = search_form.value;
   try {
     let req_data: GetRoleListReqData = {
       page_no: value.page_no, take: value.take,
-      name: value.name || null
+      name: value.name || null,
+      create_by: value.create_by || null
     }
     let res = await get_role_list(req_data);
     role_list.value = res.data.records;

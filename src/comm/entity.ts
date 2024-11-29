@@ -1,4 +1,4 @@
-import {UserType} from "@/comm/index";
+import { UserType } from "@/comm/index";
 
 export interface T_basic_rsp<T> {
     code: number,
@@ -58,3 +58,5 @@ export interface AccessData {
 export interface AccessData extends RoleData {
     value: number
 }
+
+export type OptionData = Pick<UserData, "name" | "id">;

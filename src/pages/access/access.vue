@@ -3,9 +3,16 @@
     <n-layout>
       <n-layout-header>
         <n-form inline :model="search_form" size="medium" label-align="left" label-placement="left">
+
           <n-form-item label="权限名称" path="name">
             <n-input v-model:value="search_form.name" type="text" placeholder="请输入权限名称" clearable />
           </n-form-item>
+
+          <n-form-item label="创建人" path="name">
+            <n-select v-model:value="search_form.create_by" placeholder="搜索创建人" :options="user_opts"
+              style="width: 140px;" clearable />
+          </n-form-item>
+
           <n-form-item>
             <n-button @click="search" type="info">搜索</n-button>
           </n-form-item>
@@ -59,26 +66,33 @@
   </div>
 </template>
 <script setup lang="ts">
-import { UserListReqData } from "@/api/user_api";
+import { get_user_option, UserListReqData } from "@/api/user_api";
 import { onMounted, ref, useTemplateRef } from "vue";
 import { deleteAccess, get_access_list, GetAccessListReqData } from "@/api/access_api";
 import { AccessData } from "@/comm/entity";
 import { createDiscreteApi } from "naive-ui";
 import create_update_access from "./create_update_access.vue";
+import { arrayDataToOption, OPTION } from "@/comm";
+
 const access_ref = useTemplateRef("access_ref");
-let search_form = ref<UserListReqData>({
+const search_form = ref<UserListReqData>({
   name: "",
+  create_by: null,
   page_no: 1,
   take: 10,
   total: 0,
 })
-let access_list = ref<Array<AccessData>>([])
 
+const access_list = ref<Array<AccessData>>([])
+const user_opts = ref<Array<OPTION<number>>>([])
 const msg = createDiscreteApi(['message']).message;
 
 
 onMounted(async () => {
-  await search();
+  await Promise.all([
+    search(),
+    handleSearch()
+  ])
 })
 
 async function search() {
@@ -86,7 +100,8 @@ async function search() {
   try {
     let req_data: GetAccessListReqData = {
       page_no: value.page_no, take: value.take,
-      name: value.name || null
+      name: value.name || null,
+      create_by: value.create_by || null
     }
     let res = await get_access_list(req_data);
     access_list.value = res.data.records;
@@ -95,6 +110,17 @@ async function search() {
     console.error(e);
   }
 }
+
+
+async function handleSearch() {
+  try {
+    let opt = await get_user_option();
+    user_opts.value = arrayDataToOption(opt.data)
+  } catch (error) {
+
+  }
+}
+
 
 async function pageUpdate(val: number) {
   search_form.value.page_no = val;
