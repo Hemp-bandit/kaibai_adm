@@ -31,7 +31,7 @@
             <tr v-for="(ele, index) in role_list" :key="index">
               <td>{{ ele.id }}</td>
               <td>{{ ele.name }}</td>
-              <td>{{ ele.create_by.name }}</td>
+              <td>{{ ele.create_by?.name }}</td>
               <td>{{ ele.create_time }}</td>
               <td>{{ ele.update_time }}</td>
               <td>
@@ -63,7 +63,7 @@
 import { onMounted, ref, useTemplateRef } from "vue";
 import { UserListReqData } from "@/api/user_api";
 import { RoleData } from "@/comm/entity";
-import { deleteRole, get_role_list, GetRoleListReqData, UpdateRoleData } from "@/api/role_api";
+import { deleteRole, get_role_list, GetRoleListReqData } from "@/api/role_api";
 
 import create_update_role from "./create_update_role.vue";
 import { createDiscreteApi } from "naive-ui";
@@ -108,6 +108,10 @@ async function create_role_fn() {
 }
 
 async function update_role(role: RoleData) {
+  if (!role.create_by) {
+    msg.error("角色数据错误")
+    return
+  }
   role_ref.value.update(role);
 }
 

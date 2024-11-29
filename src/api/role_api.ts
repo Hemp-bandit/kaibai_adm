@@ -3,7 +3,7 @@ import instance from "@/comm/request";
 
 export interface GetRoleListReqData extends ListReqData {
     name?: string,
-    user_id?: number
+    create_by?: number
 }
 
 export interface UpdateRoleData extends Pick<RoleData, "id">, Partial<Pick<RoleData, "name" | "status">> {

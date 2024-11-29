@@ -44,6 +44,17 @@ export interface RoleData {
     status: number;
 }
 
+export interface AccessData {
+    id: number;
+    create_time: Date;
+    update_time: Date;
+    name: string;
+    create_by: Pick<UserData, "name" | "id">;
+    status: number;
+    value: number;
+}
+
+
 export interface AccessData extends RoleData {
     value: number
 }
