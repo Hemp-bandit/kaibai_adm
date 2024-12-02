@@ -1,3 +1,5 @@
+import { OptionData } from "./entity"
+
 export enum ALL {
     ALL = "all"
 }
@@ -7,13 +9,17 @@ export enum UserType {
     CLIENT,
 }
 
-export enum ModuleMode{
+export enum ModuleMode {
     CREATE,
     UPDATE
 }
 
+export interface OPTION<T> {
+    label: string,
+    value: T
+}
 
-export function UserTypeToOption() {
+export function UserTypeToOption(): OPTION<UserType>[] {
     return [
         {
             label: '商家',
@@ -25,15 +31,29 @@ export function UserTypeToOption() {
         }
     ]
 }
-export function UserTypeToOption_All() {
+export function UserTypeToOption_All(): OPTION<UserType | ALL>[] {
     return [
         {
             label: '全部',
             value: ALL.ALL
         },
-        ... UserTypeToOption()
+        ...UserTypeToOption()
     ]
 }
+
+export function arrayDataToOption(data: Array<OptionData>): OPTION<number>[] {
+    let arr: OPTION<number>[] = []
+    data.forEach(val => {
+        let data: OPTION<number> = {
+            label: val.name,
+            value: val.id
+        }
+        arr.push(data)
+    })
+
+    return arr
+}
+
 
 export function checkPhone(phone: string) {
     let reg = /^1[3-9]\d{9}/;

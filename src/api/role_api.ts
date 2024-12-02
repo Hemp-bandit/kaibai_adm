@@ -1,4 +1,4 @@
-import { ListReqData, ListResponse, RoleData, T_basic_rsp } from "@/comm/entity";
+import { ListReqData, ListResponse, OptionData, RoleData, T_basic_rsp } from "@/comm/entity";
 import instance from "@/comm/request";
 
 export interface GetRoleListReqData extends ListReqData {
@@ -26,4 +26,8 @@ export async function updateRole(data: UpdateRoleData) {
 
 export async function deleteRole(id: number) {
     return await instance.delete<any, T_basic_rsp<string>>(`/role/${id}`);
+}
+
+export async function get_role_option() {
+    return await instance.get<any, OptionData>("/role/get_role_option")
 }

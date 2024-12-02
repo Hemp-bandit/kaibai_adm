@@ -40,6 +40,7 @@
               <td>
                 <n-space>
                   <n-button type="warning" @click="updateUser(ele)">修改</n-button>
+                  <n-button type="warning" @click="role_info_handle(ele.id)">角色信息</n-button>
 
                   <n-popconfirm @positive-click="deleteUser(ele.id)" positive-text="确定" negative-text="取消">
                     <template #trigger>
@@ -120,7 +121,7 @@ async function deleteUser(id: number) {
 
 }
 
-async function updateUser(user: UserData) {
+function updateUser(user: UserData) {
   user_ref.value.update_user_fn(_.clone(user))
 }
 
@@ -135,6 +136,11 @@ function user_type_convert(type: number) {
     case UserType.CLIENT:
       return "用户";
   }
+}
+
+
+function role_info_handle(id:number){
+
 }
 
 </script>
