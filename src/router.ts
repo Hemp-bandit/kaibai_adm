@@ -7,16 +7,8 @@ const route = createRouter({
         {
             path: "/",
             component: layout,
-            redirect: "/dashboard",
+            redirect: "/user",
             children: [
-                {
-                    path: "dashboard",
-                    component: () => import("@/pages/dashboard.vue"),
-                    name: "Dashboard",
-                    meta: {
-                        requiresAuth: true
-                    }
-                },
                 {
                     path: "user",
                     component: () => import("@/pages/user/user.vue"),

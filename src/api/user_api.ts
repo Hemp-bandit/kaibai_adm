@@ -1,4 +1,4 @@
-import { ListReqData, ListResponse, OptionData, T_basic_rsp, UserData } from "@/comm/entity";
+import {ListReqData, ListResponse, OptionData, RoleData, T_basic_rsp, UserData} from "@/comm/entity";
 import instance from "@/comm/request";
 import { ALL, UserType } from "@/comm";
 
@@ -7,6 +7,11 @@ export interface UserListReqData extends ListReqData {
     create_by?: number
     user_type?: ALL | UserType
     total: number;
+}
+
+export interface BindUserRoleData {
+    role_id: number[],
+    user_id: number,
 }
 
 export async function get_user_list(data: Omit<UserListReqData, "total">) {
@@ -27,4 +32,12 @@ export async function delete_user(id: number) {
 
 export async function get_user_option() {
     return await instance.get<any, T_basic_rsp<Array<OptionData>>>("/user/get_user_option")
+}
+
+export async function get_user_bind_roles(id: number) {
+    return await instance.get<any, T_basic_rsp<Array<RoleData>>>(`/user/user_binds/${id}`)
+}
+
+export async function bind_user_role (data:BindUserRoleData ) {
+    return await instance.post<any, T_basic_rsp<Array<RoleData>>>(`/user/bind_role`,data)
 }

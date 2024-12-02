@@ -29,5 +29,5 @@ export async function deleteRole(id: number) {
 }
 
 export async function get_role_option() {
-    return await instance.get<any, OptionData>("/role/get_role_option")
+    return await instance.get<any, T_basic_rsp<OptionData[]>>("/role/get_role_option")
 }
