@@ -6,6 +6,7 @@ npm run build
 node upload.js
 
 ls -al
+apt install expect -y
 
 passwd='WYSwill4290'
 
