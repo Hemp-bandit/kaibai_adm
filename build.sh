@@ -5,6 +5,8 @@ npm run build
 
 node upload.js
 
+ls -al
+
 passwd='WYSwill4290'
 
 /usr/bin/expect <<-EOF
