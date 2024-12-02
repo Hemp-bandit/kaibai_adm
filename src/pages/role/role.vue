@@ -57,7 +57,7 @@
         </n-table>
       </n-layout-content>
       <n-layout-footer>
-        <n-pagination v-model:page="search_form.page_no" :item-count="search_form.total" :on-update:page="pageUpdate" />
+        <n-pagination v-model:page="search_form.page_no" :item-count="search_form.total" :on-update:page="pageUpdate"   />
       </n-layout-footer>
     </n-layout>
   </div>
@@ -102,6 +102,8 @@ async function handleSearch() {
   try {
     let opt = await get_user_option();
     user_opts.value = arrayDataToOption(opt.data)
+
+
   } catch (error) {
 
   }

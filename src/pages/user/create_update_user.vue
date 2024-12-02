@@ -1,21 +1,22 @@
 <template>
   <n-modal v-model:show="showModal" :on-after-leave="close" close-on-esc display-directive="if" preset="card"
-    style="width: 600px">
+           style="width: 600px" :title="title">
     <n-form :model="user_info" :rules="rules" size="medium" label-width="100px" label-align="left"
-      label-placement="left">
+            label-placement="left">
       <n-form-item label="用户名称:" path="name">
-        <n-input v-model:value="user_info.name" type="text" maxlength="30" placeholder="请输入用户名称" clearable show-count />
+        <n-input v-model:value="user_info.name" type="text" maxlength="30" placeholder="请输入用户名称" clearable
+                 show-count/>
       </n-form-item>
       <n-form-item label="密码:" path="password" v-if="mode === ModuleMode.CREATE">
         <n-input v-model:value="user_info.password" type="password" maxlength="50" placeholder="请输入密码" show-count
-          clearable />
+                 clearable/>
       </n-form-item>
       <n-form-item label="用户手机号:" path="phone">
         <n-input v-model:value="user_info.phone" type="text" maxlength="11" placeholder="请输入用户手机号" clearable
-          show-count />
+                 show-count/>
       </n-form-item>
       <n-form-item label="用户类型:" path="user_type">
-        <n-select v-model:value="user_info.user_type" :options="options" />
+        <n-select v-model:value="user_info.user_type" :options="options"/>
       </n-form-item>
     </n-form>
 
@@ -27,17 +28,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
-import { createDiscreteApi, FormItemRule } from "naive-ui";
-import { checkPhone, ModuleMode, UserType, UserTypeToOption } from "@/comm";
-import { create_user, update_user } from "@/api/user_api";
-import { UserData } from "@/comm/entity";
+import {computed, reactive, ref} from "vue";
+import {createDiscreteApi, FormItemRule} from "naive-ui";
+import {checkPhone, ModuleMode, UserType, UserTypeToOption} from "@/comm";
+import {create_user, update_user} from "@/api/user_api";
+import {UserData} from "@/comm/entity";
 
+const showModal = ref(false);
+const mode = ref(ModuleMode.CREATE);
 
-let showModal = ref(false);
-let mode = ref(ModuleMode.CREATE);
-
-let title = computed(() => mode.value === ModuleMode.CREATE ? "创建用户" : "更新用户")
+const title = computed(() => mode.value === ModuleMode.CREATE ? "创建用户" : "更新用户")
 const options = computed(() => UserTypeToOption())
 
 // let local_user =
@@ -119,5 +119,5 @@ function close() {
   user_info.value = new LocalUser();
 }
 
-defineExpose({ create_user_fn, update_user_fn })
+defineExpose({create_user_fn, update_user_fn})
 </script>

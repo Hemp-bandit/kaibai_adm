@@ -1,10 +1,11 @@
 <template>
   <n-modal v-model:show="showModal" :on-after-leave="close" close-on-esc display-directive="if" preset="card"
-    style="width: 600px">
+           style="width: 600px" :title="title">
     <n-form :model="role_info" :rules="rules" size="medium" label-width="100px" label-align="left"
-      label-placement="left">
+            label-placement="left">
       <n-form-item label="角色名称:" path="name">
-        <n-input v-model:value="role_info.name" type="text" maxlength="30" placeholder="请输入角色名称" clearable show-count />
+        <n-input v-model:value="role_info.name" type="text" maxlength="30" placeholder="请输入角色名称" clearable
+                 show-count/>
       </n-form-item>
     </n-form>
 
@@ -14,13 +15,13 @@
   </n-modal>
 </template>
 <script lang="ts" setup>
-import { CreateRoleData, creteRole, updateRole } from '@/api/role_api';
-import { ModuleMode } from '@/comm';
-import { RoleData } from '@/comm/entity';
-import { useUserStore } from '@/store/user_store';
+import {creteRole, updateRole} from '@/api/role_api';
+import {ModuleMode} from '@/comm';
+import {RoleData} from '@/comm/entity';
+import {useUserStore} from '@/store/user_store';
 import _ from 'lodash';
-import { createDiscreteApi } from 'naive-ui';
-import { computed, ref } from 'vue';
+import {createDiscreteApi} from 'naive-ui';
+import {computed, ref} from 'vue';
 
 class local_role {
   name: string = ""
@@ -42,6 +43,7 @@ const rules = ref({
 })
 
 const user_store = useUserStore();
+
 function close() {
   role_info.value = new local_role();
 }
@@ -67,6 +69,7 @@ function open() {
   showModal.value = true;
   mode.value = ModuleMode.CREATE;
 }
+
 function update(data: RoleData) {
   showModal.value = true;
   mode.value = ModuleMode.UPDATE;
