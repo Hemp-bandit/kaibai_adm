@@ -9,7 +9,7 @@ ls -al
 
 passwd='WYSwill4290'
 
-/usr/bin/expect <<-EOF
+expect <<-EOF
 
 set time 30
 spawn  scp ./dist/index.html root@1.94.186.245:/root/gateway/html/adm
