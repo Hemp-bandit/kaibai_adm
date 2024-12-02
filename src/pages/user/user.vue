@@ -31,16 +31,15 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(ele, index) in user_list" :key="index">
-            <td>{{ ele.id }}</td>
-            <td>{{ ele.name }}</td>
-            <td>{{ user_type_convert(ele.user_type) }}</td>
-            <td>{{ ele.create_time }}</td>
-            <td>{{ ele.update_time }}</td>
-            <td>
-              <n-space>
-                <n-button type="warning" @click="updateUser(ele)">修改</n-button>
-
+            <tr v-for="(ele, index) in user_list" :key="index">
+              <td>{{ ele.id }}</td>
+              <td>{{ ele.name }}</td>
+              <td>{{ user_type_convert(ele.user_type) }}</td>
+              <td>{{ ele.create_time }}</td>
+              <td>{{ ele.update_time }}</td>
+              <td>
+                <n-space>
+                  <n-button type="warning" @click="updateUser(ele)">修改</n-button>
                 <n-button type="warning" @click="role_info_handler(ele.id)">角色信息</n-button>
 
                 <n-popconfirm @positive-click="deleteUser(ele.id)" positive-text="确定" negative-text="取消">
@@ -130,7 +129,7 @@ async function deleteUser(id: number) {
 
 }
 
-async function updateUser(user: UserData) {
+function updateUser(user: UserData) {
   user_ref.value.update_user_fn(_.clone(user))
 }
 
@@ -147,8 +146,9 @@ function user_type_convert(type: number) {
   }
 }
 
-function role_info_handler(id: number) {
-  role_ref.value.open(id)
+
+function role_info_handler(id:number){
+
 }
 
 </script>
