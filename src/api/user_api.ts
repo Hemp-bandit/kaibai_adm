@@ -23,7 +23,7 @@ export async function create_user(data: Pick<UserData, "name" | "phone" | "passw
 }
 
 export async function update_user(data: Pick<UserData, "id" | "name" | "phone" | "password" | "user_type">) {
-    return await instance.post<any, T_basic_rsp<string>>(`/user/${data.id}`, data)
+    return await instance.post<any, T_basic_rsp<string>>(`/user/update_user/${data.id}`, data)
 }
 
 export async function delete_user(id: number) {
