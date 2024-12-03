@@ -1,7 +1,9 @@
 rm -rf dist
 
-npm i 
-npm run build 
+cat "NODE_ENV=development" > .env
+
+npm i
+npm run build
 
 node upload.js
 
