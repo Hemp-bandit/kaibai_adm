@@ -1,6 +1,6 @@
 <template>
   <div class="bind_role">
-    <n-modal v-model:show="data.show" :on-after-leave="close" close-on-esc display-directive="if" preset="dialog"
+    <n-modal v-model:show="data.show" :on-after-leave="close_fn" close-on-esc display-directive="if" preset="dialog"
              style="width: 600px" title="授予的角色">
 
       <n-spin :show="data.loading">
@@ -14,7 +14,7 @@
 
       <template #action>
         <n-button type="info" @click="update">确定绑定</n-button>
-        <n-button type="warning" @click="close"> 取消</n-button>
+        <n-button type="warning" @click="close_fn"> 取消</n-button>
       </template>
 
     </n-modal>
@@ -53,12 +53,12 @@ async function init(id: number) {
 }
 
 
-const open = async (id: number) => {
+async function open_fn(id: number) {
   data.value.show = true;
   await init(id);
 }
 
-const close = () => {
+function close_fn() {
   data.value.show = false;
   data.value.choose_roles = [];
   data.value.choose_roles = [];
@@ -73,7 +73,7 @@ async function update() {
 
   try {
     await bind_user_role(req_data);
-    close();
+    close_fn();
   } catch (e) {
     console.error(e);
   }
@@ -81,8 +81,8 @@ async function update() {
 }
 
 defineExpose({
-  open,
-  close
+  open_fn,
+  close_fn
 })
 
 </script>

@@ -102,7 +102,7 @@ async function search() {
     search_form.value.total = res.data.total;
   } catch (error) {
     console.error(error);
-    msg
+    // msg.error(error.message)
   }
 }
 
@@ -148,7 +148,7 @@ function user_type_convert(type: number) {
 
 
 function role_info_handler(id:number){
-
+  role_ref.value.open_fn(id)
 }
 
 </script>

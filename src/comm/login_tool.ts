@@ -9,6 +9,7 @@ export interface UserLoginData {
     name: string,
     token: string,
 }
+
 class LoginTool {
     private login_key: string = "kaibai_adm_login"
 
@@ -19,7 +20,9 @@ class LoginTool {
 
     log_out() {
         sessionStorage.removeItem(this.login_key);
-        route.replace("/");
+        const user = useUserStore();
+        user.update_user({ id: 0, name: "", token: "", })
+        route.replace({ name: "login" });
     }
 }
 
