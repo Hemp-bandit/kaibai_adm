@@ -25,13 +25,10 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/store/user_store';
-import { menuOptions } from '../comm/menus';
+import { menuOptions } from '@/comm/menus';
 import login_tool from "@/comm/login_tool";
 
-
 const user = useUserStore();
-
-
 
 function logout() {
   login_tool.log_out();

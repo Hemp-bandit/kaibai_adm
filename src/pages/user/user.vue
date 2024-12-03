@@ -102,7 +102,7 @@ async function search() {
     search_form.value.total = res.data.total;
   } catch (error) {
     console.error(error);
-    msg
+    // msg.error(error.message)
   }
 }
 
