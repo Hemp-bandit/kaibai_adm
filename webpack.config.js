@@ -1,6 +1,8 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader')
 const path = require('path')
+require('dotenv').config();
+
 const conf = {
   entry: "./src/main.ts",
   module: {
@@ -49,8 +51,8 @@ const conf = {
     filename: '[name]-[chunkhash].js',
   }
 }
-// const is_dev = process.env.NODE_ENV === "development"
-// if (!is_dev) {
-//   conf.output['publicPath'] = "https://kaibai-admin.obs.cn-east-3.myhuaweicloud.com/adm/"
-// }
+const is_dev = process.env.NODE_ENV === "development"
+if (!is_dev) {
+  conf.output['publicPath'] = "https://kaibai-admin.obs.cn-east-3.myhuaweicloud.com/adm/"
+}
 module.exports = conf
