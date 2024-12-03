@@ -148,7 +148,7 @@ function user_type_convert(type: number) {
 
 
 function role_info_handler(id:number){
-
+  role_ref.value.open_fn(id)
 }
 
 </script>
