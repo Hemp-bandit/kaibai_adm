@@ -32,5 +32,5 @@ export async function deleteAccess(id: number) {
 }
 
 export async function getAccessOption() {
-  return await instance.get<any, T_basic_rsp<AccessOption>>(`/access/access_map`);
+  return await instance.get<any, T_basic_rsp<AccessOption[]>>(`/access/access_map`);
 }

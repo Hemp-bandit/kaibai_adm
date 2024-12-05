@@ -8,13 +8,12 @@ export const useUserStore = defineStore('user', () => {
     const user_info = ref<UserLoginData>({
         id: 0,
         name: "",
-        token: ""
+        token: "",
+        auth: 0
     })
 
     function init() {
         const data = sessionStorage.getItem("USER_INFO");
-        console.log(data);
-        
         if (data) {
             const info: UserLoginData = JSON.parse(data);
             user_info.value.id = info.id || 0;
@@ -28,12 +27,12 @@ export const useUserStore = defineStore('user', () => {
         user_info.value.id = data.id;
         user_info.value.name = data.name;
         user_info.value.token = data.token;
+        user_info.value.auth = data.auth;
         sessionStorage.setItem("USER_INFO", JSON.stringify(_.clone(user_info.value)));
     }
 
     function is_login(): boolean {
         return user_info.value.token && user_info.value.token !== ''
-
     }
 
     return { user_info, update_user, is_login }

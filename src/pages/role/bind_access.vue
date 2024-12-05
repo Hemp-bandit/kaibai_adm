@@ -27,6 +27,7 @@ import { getAccessOption } from '@/api/access_api';
 import { bind_role_access, get_role_binds } from '@/api/role_api';
 import { arrayDataToOption } from '@/comm';
 import { OptionData } from '@/comm/entity';
+import { useAccessStore } from '@/store/access_store';
 import { ref } from 'vue';
 
 const data = ref({
@@ -45,11 +46,9 @@ async function open_fn(id: number) {
 async function init(id: number) {
   try {
     data.value.curr_uid = id;
-    const [role_opts, bind_roles] = await Promise.all([
-      getAccessOption(),
-      get_role_binds(id)
-    ]);
-    data.value.role_opts = arrayDataToOption(role_opts.data as unknown as OptionData[]);
+    const bind_roles = await get_role_binds(id);
+    const access_store = useAccessStore();
+    data.value.role_opts = arrayDataToOption(access_store.access_map);
     data.value.choose_roles = bind_roles.data.map(ele => ele.id);
   } catch (e) {
     console.error(e);

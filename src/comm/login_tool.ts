@@ -6,6 +6,7 @@ import { useUserStore } from "@/store/user_store";
 
 export interface UserLoginData {
     id: number,
+    auth: number,
     name: string,
     token: string,
 }
@@ -14,14 +15,17 @@ class LoginTool {
     private login_key: string = "kaibai_adm_login"
 
     async login_remote(data: LoginData): Promise<UserLoginData> {
-        const login_res = await instance.post<any, T_basic_rsp<UserLoginData>>("/auth/login", data);
-        return login_res.data;
+        const login_res = await instance.post<any, T_basic_rsp<string>>("/auth/login", data);
+        let decode_info: string = atob(login_res.data);
+        const info: UserLoginData = JSON.parse(decode_info)
+        info.token = login_res.data
+        return info;
     }
 
     log_out() {
         sessionStorage.removeItem(this.login_key);
         const user = useUserStore();
-        user.update_user({ id: 0, name: "", token: "", })
+        user.update_user({ id: 0, name: "", token: "", auth: 0 })
         route.replace({ name: "login" });
     }
 }

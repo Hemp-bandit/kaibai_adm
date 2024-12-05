@@ -50,7 +50,7 @@ const msg = createDiscreteApi(['message']).message;
 const emit = defineEmits(['reflash'])
 
 async function role_handler() {
-  if (mode.value = ModuleMode.CREATE) role_info.value.create_by = user_store.user_info.id;
+  if (mode.value === ModuleMode.CREATE) role_info.value.create_by = user_store.user_info.id;
 
   try {
     const data = _.clone(role_info.value);
