@@ -15,7 +15,8 @@ const route = createRouter({
                     component: () => import("@/pages/user/user.vue"),
                     name: "user",
                     meta: {
-                        requiresAuth: true
+                        requiresAuth: true,
+                        auths: ["ADMIN"]
                     }
                 },
                 {
@@ -23,7 +24,8 @@ const route = createRouter({
                     component: () => import("@/pages/role/role.vue"),
                     name: "role",
                     meta: {
-                        requiresAuth: true
+                        requiresAuth: true,
+                        auths: ["ADMIN"]
                     }
                 },
                 {
@@ -31,7 +33,8 @@ const route = createRouter({
                     component: () => import("@/pages/access/access.vue"),
                     name: "access",
                     meta: {
-                        requiresAuth: true
+                        requiresAuth: true,
+                        auths: ["ADMIN"]
                     }
                 },
             ]
@@ -49,7 +52,7 @@ route.beforeEach((to, from,) => {
     const user_store = useUserStore();
     const access_store = useAccessStore();
 
-    
+
     const is_login = user_store.is_login();
 
     if (to.meta.requiresAuth && !is_login) {
