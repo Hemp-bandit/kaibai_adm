@@ -16,7 +16,7 @@ jobs:
       - name: build
         run: |
           rm -rf dist
-          cat "NODE_ENV=production" > .env
+          echo "NODE_ENV=production" > .env
           npm i
           npm run build
       - name: upload_to_oss
