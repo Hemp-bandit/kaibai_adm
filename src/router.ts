@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, createWebHistory, } from 'vue-router';
 import layout from './pages/layout.vue'
 import { useUserStore } from './store/user_store';
+import { useAccessStore } from './store/access_store';
 
 const route = createRouter({
     routes: [
@@ -45,8 +46,11 @@ const route = createRouter({
 })
 
 route.beforeEach((to, from,) => {
-    const store = useUserStore();
-    const is_login = store.is_login();
+    const user_store = useUserStore();
+    const access_store = useAccessStore();
+
+    
+    const is_login = user_store.is_login();
 
     if (to.meta.requiresAuth && !is_login) {
         return {
