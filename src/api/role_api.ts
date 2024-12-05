@@ -7,10 +7,16 @@ export interface GetRoleListReqData extends ListReqData {
 }
 
 export interface UpdateRoleData extends Pick<RoleData, "id">, Partial<Pick<RoleData, "name" | "status">> {
-
 }
 
 export type CreateRoleData = Pick<RoleData, "name"> & { create_by: number };
+
+export interface BindRoleAccessData {
+    role_id: number,
+    access_ids: number[],
+}
+
+
 
 export async function get_role_list(data: GetRoleListReqData) {
     return await instance.post<any, T_basic_rsp<ListResponse<RoleData>>>('/role/get_role_list', data)
@@ -30,4 +36,12 @@ export async function deleteRole(id: number) {
 
 export async function get_role_option() {
     return await instance.get<any, T_basic_rsp<OptionData[]>>("/role/get_role_option")
+}
+export async function get_role_binds(id:number) {
+    return await instance.get<any, T_basic_rsp<OptionData[]>>(`/role/role_binds/${id}`)
+}
+
+
+export async function bind_role_access(data: BindRoleAccessData) {
+    return await instance.post<any, T_basic_rsp<string>>(`/role/bind_access`, data);
 }

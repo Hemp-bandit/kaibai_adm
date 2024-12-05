@@ -43,7 +43,7 @@
               <td>
                 <n-space>
                   <n-button type="warning" @click="update_role(ele)">修改</n-button>
-
+                  <n-button type="warning" @click="access_info_handler(ele.id)">权限信息</n-button>
                   <n-popconfirm @positive-click="delete_role(ele.id)" positive-text="确定" negative-text="取消">
                     <template #trigger>
                       <n-button type="error"> 删除</n-button>
@@ -57,12 +57,13 @@
         </n-table>
       </n-layout-content>
       <n-layout-footer>
-        <n-pagination v-model:page="search_form.page_no" :item-count="search_form.total" :on-update:page="pageUpdate"   />
+        <n-pagination v-model:page="search_form.page_no" :item-count="search_form.total" :on-update:page="pageUpdate" />
       </n-layout-footer>
     </n-layout>
   </div>
 
   <create_update_role ref="role_ref" @reflash="search" />
+  <bind_access ref="access_ref" />
 </template>
 
 <script setup lang="ts">
@@ -70,11 +71,14 @@ import { deleteRole, get_role_list, GetRoleListReqData } from "@/api/role_api";
 import { get_user_option, UserListReqData } from "@/api/user_api";
 import { RoleData } from "@/comm/entity";
 import { onMounted, ref, useTemplateRef } from "vue";
-
 import { arrayDataToOption, OPTION } from "@/comm";
 import { createDiscreteApi } from "naive-ui";
 import create_update_role from "./create_update_role.vue";
+import bind_access from "./bind_access.vue";
+
+
 const role_ref = useTemplateRef("role_ref");
+const access_ref = useTemplateRef("access_ref");
 let search_form = ref<UserListReqData>({
   name: "",
   create_by: null,
@@ -150,5 +154,9 @@ async function delete_role(role_id: number) {
   } catch (error) {
     console.error(error);
   }
+}
+
+function access_info_handler(id: number) {
+  access_ref.value.open_fn(id);
 }
 </script>

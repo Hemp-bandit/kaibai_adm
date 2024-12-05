@@ -7,7 +7,7 @@ import login_tool from './login_tool';
 // @ts-ignore
 const isDev = process.env.NODE_ENV === "development"
 const instance = axios.create({
-    baseURL: isDev ? "http://localhost:3000/api" : "http://1.94.186.245:30000/api",
+    baseURL: isDev ? "http://localhost:3000/api" : "http://kaibai.cloud:30000/api",
     timeout: 30000
 })
 
