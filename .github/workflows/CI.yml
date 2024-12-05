@@ -13,5 +13,23 @@ jobs:
           echo "git clone "
           git clone  https://github.com/Hemp-bandit/kaibai_adm .
           ls -al
-      - name: build & push
-        run: bash build.sh 
+      - name: build
+        run: |
+          rm -rf dist
+          cat "NODE_ENV=production" > .env
+          npm i
+          npm run build
+      - name: upload_to_oss
+        run: node upload.js
+      - name: sync_server
+        run: |
+          sudo apt install expect -y
+          expect <<-EOF
+          set time 30
+          spawn  scp ./dist/index.html ${{ secrets.SERVER_ACCOUNT }}@${{ secrets.SERVER_ADDR }}:/root/gateway/html/adm
+          expect {
+          "*yes/no" { send "yes\r"; exp_continue }
+          "*password:" { send "${{ secrets.SERVER_PASS }}\r" }
+          }
+          expect eof
+          EOF
