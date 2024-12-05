@@ -27,7 +27,7 @@ export async function update_user(data: Pick<UserData, "id" | "name" | "phone" |
 }
 
 export async function delete_user(id: number) {
-    return await instance.delete<any, T_basic_rsp<string>>(`/user/${id}`)
+    return await instance.delete<any, T_basic_rsp<string>>(`/user/delete_user/${id}`)
 }
 
 export async function get_user_option() {
