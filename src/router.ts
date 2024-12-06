@@ -2,20 +2,31 @@ import { createRouter, createWebHashHistory, createWebHistory, } from 'vue-route
 import layout from './pages/layout.vue'
 import { useUserStore } from './store/user_store';
 import { useAccessStore } from './store/access_store';
+import { createDiscreteApi } from 'naive-ui';
 
 const route = createRouter({
     routes: [
         {
             path: "/",
             component: layout,
-            redirect: "/user",
+            redirect: "/dashboard",
             children: [
+                {
+                    path: "dashboard",
+                    component: () => import("@/pages/dashboard.vue"),
+                    name: "dashboard",
+                    meta: {
+                        requiresAuth: false,
+                        auths: ["ADMIN"]
+                    }
+                },
                 {
                     path: "user",
                     component: () => import("@/pages/user/user.vue"),
                     name: "user",
                     meta: {
-                        requiresAuth: true
+                        requiresAuth: true,
+                        auths: ["ADMIN"]
                     }
                 },
                 {
@@ -23,7 +34,8 @@ const route = createRouter({
                     component: () => import("@/pages/role/role.vue"),
                     name: "role",
                     meta: {
-                        requiresAuth: true
+                        requiresAuth: true,
+                        auths: ["ADMIN"]
                     }
                 },
                 {
@@ -31,7 +43,8 @@ const route = createRouter({
                     component: () => import("@/pages/access/access.vue"),
                     name: "access",
                     meta: {
-                        requiresAuth: true
+                        requiresAuth: true,
+                        auths: ["ADMIN"]
                     }
                 },
             ]
@@ -44,17 +57,29 @@ const route = createRouter({
     ],
     history: createWebHashHistory()
 })
+const msg = createDiscreteApi(['message']).message;
 
 route.beforeEach((to, from,) => {
     const user_store = useUserStore();
     const access_store = useAccessStore();
-
-    
     const is_login = user_store.is_login();
 
-    if (to.meta.requiresAuth && !is_login) {
-        return {
-            path: '/login',
+
+
+    if (to.meta.requiresAuth) {
+        if (!is_login) {
+            return {
+                path: '/login',
+            }
+        }
+        const user_auth = user_store.user_info.auth;
+        // @ts-ignore
+        const req_list = to.meta.auths as string[];
+        if (access_store.has_map()) {
+            if (!access_store.verify_auth(user_auth, req_list)) {
+                msg.error("该用户没有权限访问,请向管理员申请权限")
+                return false
+            }
         }
     }
 })
