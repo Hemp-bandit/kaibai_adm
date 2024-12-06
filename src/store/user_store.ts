@@ -19,6 +19,7 @@ export const useUserStore = defineStore('user', () => {
             user_info.value.id = info.id || 0;
             user_info.value.name = info.name || "";
             user_info.value.token = info.token || "";
+            user_info.value.auth = info.auth || 0;
         }
     }
 
