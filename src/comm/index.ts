@@ -59,3 +59,7 @@ export function checkPhone(phone: string) {
     let reg = /^1[3-9]\d{9}/;
     return reg.test(phone);
 }
+
+export function is_adm(name: string): boolean {
+    return name.toUpperCase() === 'ADMIN'
+}

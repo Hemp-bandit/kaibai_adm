@@ -39,12 +39,13 @@
               <td>{{ ele.update_time }}</td>
               <td>
                 <n-space>
-                  <n-button type="warning" @click="updateUser(ele)">修改</n-button>
-                  <n-button type="warning" @click="role_info_handler(ele.id)">角色信息</n-button>
+                  <n-button type="warning" @click="updateUser(ele)" :disabled="is_adm(ele.name)">修改</n-button>
+                  <n-button type="warning" @click="role_info_handler(ele.id)"
+                    :disabled="is_adm(ele.name)">角色信息</n-button>
 
                   <n-popconfirm @positive-click="deleteUser(ele.id)" positive-text="确定" negative-text="取消">
                     <template #trigger>
-                      <n-button type="error"> 删除</n-button>
+                      <n-button type="error" :disabled="is_adm(ele.name)"> 删除</n-button>
                     </template>
                     确定删除么?
                   </n-popconfirm>
@@ -73,6 +74,7 @@ import bind_role from './bind_role.vue';
 import { ALL, UserType, UserTypeToOption_All } from "@/comm";
 import _ from "lodash";
 import { createDiscreteApi, } from "naive-ui";
+import { is_adm } from '@/comm/index'
 
 const user_ref = useTemplateRef("user_ref");
 const role_ref = useTemplateRef("role_ref");

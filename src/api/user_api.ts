@@ -41,3 +41,6 @@ export async function get_user_bind_roles(id: number) {
 export async function bind_user_role(data: BindUserRoleData) {
     return await instance.post<any, T_basic_rsp<Array<RoleData>>>(`/user/bind_role`, data)
 }
+export async function get_user_permission(id: number) {
+    return await instance.get<any, T_basic_rsp<number>>(`/auth/get_user_permission/${id}`)
+}

@@ -23,15 +23,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { getAccessOption } from '@/api/access_api';
 import { bind_role_access, get_role_binds } from '@/api/role_api';
 import { arrayDataToOption } from '@/comm';
-import { OptionData } from '@/comm/entity';
 import { useAccessStore } from '@/store/access_store';
+import { useUserStore } from '@/store/user_store';
 import { ref } from 'vue';
 
 const access_store = useAccessStore();
-
+const user_store = useUserStore();
 const data = ref({
   show: false,
   loading: true,
@@ -70,6 +69,7 @@ function close_fn() {
   data.value.loading = true;
 }
 
+
 async function update() {
   const req_data = {
     "access_ids": data.value.choose_roles,
@@ -78,6 +78,7 @@ async function update() {
 
   try {
     await bind_role_access(req_data);
+    await user_store.sync_permission(data.value.curr_uid);
     close_fn();
   } catch (e) {
     console.error(e);
