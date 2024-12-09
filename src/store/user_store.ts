@@ -1,3 +1,4 @@
+import { get_user_permission } from '@/api/user_api';
 import { UserLoginData } from '@/comm/login_tool';
 import _ from 'lodash';
 import { defineStore } from 'pinia'
@@ -29,6 +30,8 @@ export const useUserStore = defineStore('user', () => {
         user_info.value.name = data.name;
         user_info.value.token = data.token;
         user_info.value.auth = data.auth;
+        console.log(user_info.value);
+
         sessionStorage.setItem("USER_INFO", JSON.stringify(_.clone(user_info.value)));
     }
 
@@ -36,6 +39,12 @@ export const useUserStore = defineStore('user', () => {
         return user_info.value.token && user_info.value.token !== ''
     }
 
-    return { user_info, update_user, is_login }
+    async function sync_permission(id: number) {
+        let auth = await get_user_permission(id);
+        console.log(auth);
+        user_info.value.auth = auth.data
+    }
+
+    return { user_info, update_user, is_login, sync_permission }
 });
 

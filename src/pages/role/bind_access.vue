@@ -23,13 +23,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { getAccessOption } from '@/api/access_api';
 import { bind_role_access, get_role_binds } from '@/api/role_api';
 import { arrayDataToOption } from '@/comm';
-import { OptionData } from '@/comm/entity';
 import { useAccessStore } from '@/store/access_store';
+import { useUserStore } from '@/store/user_store';
 import { ref } from 'vue';
 
+const access_store = useAccessStore();
+const user_store = useUserStore();
 const data = ref({
   show: false,
   loading: true,
@@ -46,8 +47,11 @@ async function open_fn(id: number) {
 async function init(id: number) {
   try {
     data.value.curr_uid = id;
-    const bind_roles = await get_role_binds(id);
-    const access_store = useAccessStore();
+    const [bind_roles] = await Promise.all([
+      get_role_binds(id),
+      access_store.init()
+    ]);
+
     data.value.role_opts = arrayDataToOption(access_store.access_map);
     data.value.choose_roles = bind_roles.data.map(ele => ele.id);
   } catch (e) {
@@ -65,6 +69,7 @@ function close_fn() {
   data.value.loading = true;
 }
 
+
 async function update() {
   const req_data = {
     "access_ids": data.value.choose_roles,
@@ -73,6 +78,7 @@ async function update() {
 
   try {
     await bind_role_access(req_data);
+    await user_store.sync_permission(data.value.curr_uid);
     close_fn();
   } catch (e) {
     console.error(e);

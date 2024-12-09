@@ -1,7 +1,7 @@
 <template>
   <div class="bind_role">
     <n-modal v-model:show="data.show" :on-after-leave="close_fn" close-on-esc display-directive="if" preset="dialog"
-             style="width: 600px" title="授予的角色">
+      style="width: 600px" title="授予的角色">
 
       <n-spin :show="data.loading">
         <template #description>
@@ -9,7 +9,7 @@
         </template>
 
         <n-transfer v-model:value="data.choose_roles" :options="data.role_opts" clear-text="清除"
-                    select-all-text="选择全部"/>
+          select-all-text="选择全部" />
       </n-spin>
 
       <template #action>
@@ -22,11 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import {get_role_option} from "@/api/role_api";
-import {bind_user_role, get_user_bind_roles} from "@/api/user_api";
-import {arrayDataToOption} from "@/comm";
-
+import { ref } from "vue";
+import { get_role_option } from "@/api/role_api";
+import { bind_user_role, get_user_bind_roles } from "@/api/user_api";
+import { arrayDataToOption } from "@/comm";
+import { useUserStore } from "@/store/user_store";
+const user_store = useUserStore();
 const data = ref({
   show: false,
   loading: true,
@@ -73,6 +74,7 @@ async function update() {
 
   try {
     await bind_user_role(req_data);
+    await user_store.sync_permission(data.value.curr_uid);
     close_fn();
   } catch (e) {
     console.error(e);

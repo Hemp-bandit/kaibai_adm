@@ -43,11 +43,11 @@
               <td>{{ ele.update_time }}</td>
               <td>
                 <n-space>
-                  <n-button type="warning" @click="update_access(ele)">修改</n-button>
+                  <n-button type="warning" @click="update_access(ele)" :disabled="is_adm(ele.name)">修改</n-button>
 
                   <n-popconfirm @positive-click="delete_access(ele.id)" positive-text="确定" negative-text="取消">
                     <template #trigger>
-                      <n-button type="error"> 删除</n-button>
+                      <n-button type="error" :disabled="is_adm(ele.name)"> 删除</n-button>
                     </template>
                     确定删除么?
                   </n-popconfirm>
@@ -58,7 +58,7 @@
         </n-table>
       </n-layout-content>
       <n-layout-footer>
-        <n-pagination v-model:page="search_form.page_no" :item-count="search_form.total" :on-update:page="pageUpdate"  />
+        <n-pagination v-model:page="search_form.page_no" :item-count="search_form.total" :on-update:page="pageUpdate" />
       </n-layout-footer>
     </n-layout>
 
@@ -73,6 +73,7 @@ import { AccessData } from "@/comm/entity";
 import { createDiscreteApi } from "naive-ui";
 import create_update_access from "./create_update_access.vue";
 import { arrayDataToOption, OPTION } from "@/comm";
+import { is_adm } from '@/comm/index'
 
 const access_ref = useTemplateRef("access_ref");
 const search_form = ref<UserListReqData>({

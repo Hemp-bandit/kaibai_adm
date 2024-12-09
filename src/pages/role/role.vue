@@ -42,11 +42,12 @@
               <td>{{ ele.update_time }}</td>
               <td>
                 <n-space>
-                  <n-button type="warning" @click="update_role(ele)">修改</n-button>
-                  <n-button type="warning" @click="access_info_handler(ele.id)">权限信息</n-button>
+                  <n-button type="warning" @click="update_role(ele)" :disabled="is_adm(ele.name)">修改</n-button>
+                  <n-button type="warning" @click="access_info_handler(ele.id)"
+                    :disabled="is_adm(ele.name)">权限信息</n-button>
                   <n-popconfirm @positive-click="delete_role(ele.id)" positive-text="确定" negative-text="取消">
                     <template #trigger>
-                      <n-button type="error"> 删除</n-button>
+                      <n-button type="error" :disabled="is_adm(ele.name)"> 删除</n-button>
                     </template>
                     确定删除么?
                   </n-popconfirm>
@@ -75,7 +76,7 @@ import { arrayDataToOption, OPTION } from "@/comm";
 import { createDiscreteApi } from "naive-ui";
 import create_update_role from "./create_update_role.vue";
 import bind_access from "./bind_access.vue";
-
+import { is_adm } from '@/comm/index'
 
 const role_ref = useTemplateRef("role_ref");
 const access_ref = useTemplateRef("access_ref");
@@ -92,7 +93,6 @@ const user_opts = ref<Array<OPTION<number>>>([])
 
 
 const msg = createDiscreteApi(['message']).message;
-
 
 onMounted(async () => {
 

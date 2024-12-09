@@ -9,8 +9,8 @@ import 'vfonts/Lato.css'
 // 等宽字体
 import 'vfonts/FiraCode.css'
 import { createPinia } from 'pinia'
-import { useUserStore } from "./store/user_store";
 import { useAccessStore } from "./store/access_store";
+import { useUserStore } from "./store/user_store";
 
 const pinia = createPinia()
 createApp(App)
@@ -23,9 +23,4 @@ const access_store = useAccessStore();
 const user_store = useUserStore();
 (async () => {
     await access_store.init();
-    setInterval(async () => {
-        if (user_store.is_login()) {
-            try { await access_store.init(); } catch (e) { }
-        }
-    }, 1000);
 })()
