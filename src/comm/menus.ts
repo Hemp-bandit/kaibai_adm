@@ -11,6 +11,20 @@ export const menuOptions: MenuOption[] = [
                 RouterLink,
                 {
                     to: {
+                        name: 'dashboard',
+                    }
+                },
+                'dashboard'
+            ),
+        key: 'dashboard',
+        icon: renderIcon(FileTrayFull)
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
                         name: 'user',
                     }
                 },

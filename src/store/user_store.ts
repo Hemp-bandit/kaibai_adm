@@ -1,5 +1,5 @@
 import { get_user_permission } from '@/api/user_api';
-import { UserLoginData } from '@/comm/login_tool';
+import login_tool, { UserLoginData } from '@/comm/login_tool';
 import _ from 'lodash';
 import { defineStore } from 'pinia'
 import { ref } from 'vue';
@@ -42,6 +42,7 @@ export const useUserStore = defineStore('user', () => {
     async function sync_permission(id: number) {
         let auth = await get_user_permission(id);
         console.log(auth);
+        login_tool.auth = auth.data;
         user_info.value.auth = auth.data
     }
 

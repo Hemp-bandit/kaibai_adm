@@ -30,7 +30,6 @@ import { useUserStore } from '@/store/user_store';
 import { ref } from 'vue';
 
 const access_store = useAccessStore();
-const user_store = useUserStore();
 const data = ref({
   show: false,
   loading: true,
@@ -78,7 +77,6 @@ async function update() {
 
   try {
     await bind_role_access(req_data);
-    await user_store.sync_permission(data.value.curr_uid);
     close_fn();
   } catch (e) {
     console.error(e);
