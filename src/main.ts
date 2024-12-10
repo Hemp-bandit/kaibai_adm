@@ -22,5 +22,6 @@ createApp(App)
 const access_store = useAccessStore();
 const user_store = useUserStore();
 (async () => {
+    if (user_store.is_login()) { user_store.sync_permission(user_store.user_info.id); }
     await access_store.init();
 })()

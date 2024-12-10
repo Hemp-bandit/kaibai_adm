@@ -27,7 +27,6 @@ import { get_role_option } from "@/api/role_api";
 import { bind_user_role, get_user_bind_roles } from "@/api/user_api";
 import { arrayDataToOption } from "@/comm";
 import { useUserStore } from "@/store/user_store";
-const user_store = useUserStore();
 const data = ref({
   show: false,
   loading: true,
@@ -74,7 +73,6 @@ async function update() {
 
   try {
     await bind_user_role(req_data);
-    await user_store.sync_permission(data.value.curr_uid);
     close_fn();
   } catch (e) {
     console.error(e);

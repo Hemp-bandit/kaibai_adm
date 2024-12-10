@@ -13,7 +13,8 @@ export interface UserLoginData {
 
 class LoginTool {
     private login_key: string = "kaibai_adm_login"
-
+    public auth: number
+    
     async login_remote(data: LoginData): Promise<UserLoginData> {
         const login_res = await instance.post<any, T_basic_rsp<string>>("/auth/login", data);
         let decode_info: string = atob(login_res.data);
