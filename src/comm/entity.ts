@@ -54,7 +54,18 @@ export interface AccessData {
     value: number;
 }
 
-
+export interface StoreData {
+    id: number;
+    create_time: Date;
+    update_time: Date;
+    status: number;
+    create_by: number;
+    name: string;
+    picture: string;
+    description: string;
+    address: string;
+    shell: string;
+}
 export interface AccessData extends RoleData {
     value: number
 }
