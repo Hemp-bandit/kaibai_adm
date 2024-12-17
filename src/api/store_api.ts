@@ -25,5 +25,5 @@ export async function update_store(data: Partial<CreateStoreData> & { id: number
   return await store_instance.put<any, T_basic_rsp<string>>("/store/update_store", data);
 }
 export async function get_store_list(data: StoreListReqData) {
-  return await store_instance.post<any, T_basic_rsp<ListResponse<StoreData>>>("/store/update_store", data);
+  return await store_instance.post<any, T_basic_rsp<ListResponse<StoreData>>>("/store/get_store_list", data);
 }
