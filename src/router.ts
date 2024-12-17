@@ -48,6 +48,14 @@ const route = createRouter({
                         auths: ["ADMIN"]
                     }
                 },
+                {
+                    path: "store_list",
+                    component: () => import("@/pages/store/store_list.vue"),
+                    name: "store_list",
+                    meta: {
+                        requiresAuth: false,
+                    }
+                },
             ]
         },
         {
@@ -61,8 +69,6 @@ const route = createRouter({
 const msg = createDiscreteApi(['message']).message;
 
 route.beforeEach((to, from,) => {
-    console.log('[ to ] >', to)
-    console.log('[ from ] >', from)
     const user_store = useUserStore();
     const access_store = useAccessStore();
     const is_login = user_store.is_login();
