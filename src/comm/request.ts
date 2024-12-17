@@ -5,7 +5,7 @@ import route from '@/router';
 import login_tool from './login_tool';
 
 // @ts-ignore
-const isDev = true//process.env.NODE_ENV === "development"
+const isDev = process.env.NODE_ENV === "development"
 const user_instance = axios.create({
     baseURL: isDev ? "http://localhost:3000/api" : "http://kaibai.cloud:30000/api",
     timeout: 30000
