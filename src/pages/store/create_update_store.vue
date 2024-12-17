@@ -7,6 +7,11 @@
         <n-input v-model:value="store_info.name" type="text" maxlength="30" placeholder="请输入店铺名称" clearable
           show-count />
       </n-form-item>
+
+      <n-form-item label="店铺介绍:" path="description">
+        <n-input v-model:value="store_info.description" type="text" maxlength="100" placeholder="请输入店铺介绍" clearable
+          show-count />
+      </n-form-item>
     </n-form>
 
     <template #footer>
@@ -19,15 +24,14 @@
 <script setup lang="ts">
 import { create_store, CreateStoreData } from "@/api/store_api";
 import { update_user } from "@/api/user_api";
-import { checkPhone, ModuleMode, UserTypeToOption } from "@/comm";
-import { createDiscreteApi, FormItemRule } from "naive-ui";
+import { ModuleMode } from "@/comm";
+import { createDiscreteApi } from "naive-ui";
 import { computed, reactive, ref } from "vue";
 
 const showModal = ref(false);
 const mode = ref(ModuleMode.CREATE);
 
 const title = computed(() => mode.value === ModuleMode.CREATE ? "创建用户" : "更新用户")
-const options = computed(() => UserTypeToOption())
 
 // let local_user =
 class LocalStore implements CreateStoreData {
@@ -44,26 +48,24 @@ let store_info = ref(new LocalStore());
 const rules = reactive({
   name: {
     required: true,
-    message: '请输入姓名',
+    message: '请输入店铺名称',
     trigger: 'blur'
   },
-  password: {
+  description: {
     required: true,
-    message: '请输入密码',
-    trigger: ['blur']
+    message: '请输入店铺介绍',
+    trigger: 'blur'
   },
-  phone: {
+  picture: {
     required: true,
-    validator(rule: FormItemRule, value: string) {
-      if (!value) {
-        return new Error('请输入手机号')
-      } else if (!checkPhone(value)) {
-        return new Error('手机号不正确')
-      }
-      return true
-    },
-    trigger: ['blur', "input"]
-  }
+    message: '请输入店铺图片',
+    trigger: 'blur'
+  },
+  shell: {
+    required: true,
+    message: '请输入店铺方向',
+    trigger: 'blur'
+  },
 })
 const msg = createDiscreteApi(['message']);
 const emit = defineEmits(['reflash'])
@@ -95,12 +97,12 @@ async function update_user_handler() {
 }
 
 
-const create_user_fn = () => {
+const create_store_fn = () => {
   mode.value = ModuleMode.CREATE;
   showModal.value = true;
 }
 
-const update_user_fn = (new_store: CreateStoreData) => {
+const update_store_fn = (new_store: CreateStoreData) => {
   mode.value = ModuleMode.UPDATE;
   store_info.value = new_store;
   showModal.value = true;
@@ -110,5 +112,5 @@ function close() {
   store_info.value = new LocalStore();
 }
 
-defineExpose({ create_user_fn, update_user_fn })
+defineExpose({ create_store_fn, update_store_fn })
 </script>
