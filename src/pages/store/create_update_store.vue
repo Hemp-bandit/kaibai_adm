@@ -1,7 +1,7 @@
 <template>
   <n-modal v-model:show="showModal" :on-after-leave="close" close-on-esc display-directive="if" preset="card"
     style="width: 600px" :title="title">
-    <n-form :model="store_info" :rules="rules" size="medium" label-width="100px" label-align="left"
+    <n-form :model="store_info" :rules="rules" size="medium" ref="from_ref" label-width="100px" label-align="left"
       label-placement="left">
       <n-form-item label="店铺名称:" path="name">
         <n-input v-model:value="store_info.name" type="text" maxlength="30" placeholder="请输入店铺名称" clearable
@@ -12,8 +12,12 @@
         <n-input v-model:value="store_info.description" type="textarea" maxlength="100" placeholder="请输入店铺介绍" clearable
           show-count />
       </n-form-item>
+      <n-form-item label="店铺类型:" path="shell">
+        <n-input v-model:value="store_info.shell" type="textarea" maxlength="100" placeholder="请输入店铺类型" clearable
+          show-count />
+      </n-form-item>
 
-      <n-form-item label="店铺介绍:" path="description">
+      <n-form-item label="店铺预览图:" path="picture">
         <n-upload action="" :default-upload="false" @change="handleChange" list-type="image" accept=".png,.jpeg,.jpg"
           :max="1">
           <n-button>上传文件</n-button>
@@ -33,17 +37,20 @@ import { create_store, CreateStoreData } from "@/api/store_api";
 import { update_user } from "@/api/user_api";
 import { ModuleMode } from "@/comm";
 import { HwUpload } from "@/comm/uploader";
+import { useUserStore } from "@/store/user_store";
 import { createDiscreteApi, UploadFileInfo } from "naive-ui";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, useTemplateRef } from "vue";
 
+const user_store = useUserStore();
 const showModal = ref(false);
 const mode = ref(ModuleMode.CREATE);
 const title = computed(() => mode.value === ModuleMode.CREATE ? "创建用户" : "更新用户")
+const from_ref = useTemplateRef('from_ref');
 
 // let local_user =
 class LocalStore implements CreateStoreData {
   address: string = "";
-  create_by: number;
+  create_by: number = user_store.user_info.id;
   description: string = "";
   picture: string = "";
   shell: string = "";
@@ -65,7 +72,7 @@ const rules = reactive({
   },
   picture: {
     required: true,
-    message: '请输入店铺图片',
+    message: '请输上传店铺图片',
     trigger: 'blur'
   },
   shell: {
@@ -80,6 +87,8 @@ const emit = defineEmits(['reflash'])
 
 async function create_user_handler() {
   try {
+    // @ts-ignore
+    await from_ref.value.validate();
     let res = await create_store(store_info.value);
     msg.message.success(res.msg);
     showModal.value = false;
@@ -106,9 +115,10 @@ async function update_user_handler() {
 const upload = new HwUpload()
 
 async function handleChange(options: { fileList: UploadFileInfo[], file: any }) {
-  if (!options) { return }
-  console.log(options);
+  if (!options) { store_info.value.picture = null; return }
   try {
+    // @ts-ignore
+    await from_ref.value.validate();
     await upload.initClient();
     let url = await upload.singleUpload(options.file.name, options.file.file);
     console.log(url);

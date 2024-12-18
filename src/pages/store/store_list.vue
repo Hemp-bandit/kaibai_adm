@@ -29,6 +29,8 @@
               <th style="width: 50px;">id</th>
               <th>店铺名称</th>
               <th>创建人</th>
+              <th>预览图</th>
+              <th>简介</th>
               <th style="width: 150px;">创建时间</th>
               <th style="width: 150px;">更新时间</th>
               <th style="width: 300px;">操作</th>
@@ -39,11 +41,15 @@
               <td>{{ ele.id }}</td>
               <td>{{ ele.name }}</td>
               <td>{{ ele.create_by?.name }}</td>
+              <td><n-image width="100" :src="ele.picture" /></td>
+              <td>
+                <n-input v-model:value="ele.description" type="textarea" :readonly="true" />
+              </td>
               <td>{{ ele.create_time }}</td>
               <td>{{ ele.update_time }}</td>
               <td>
                 <n-space>
-                  <!-- <n-button type="warning" @click="update_role(ele)" :disabled="is_adm(ele.name)">修改</n-button>
+                  <!-- <n-button type=" warning" @click="update_role(ele)" :disabled="is_adm(ele.name)">修改</n-button>
                   <n-button type="warning" @click="access_info_handler(ele.id)"
                     :disabled="is_adm(ele.name)">权限信息</n-button>
                   <n-popconfirm @positive-click="delete_role(ele.id)" positive-text="确定" negative-text="取消">
