@@ -50,8 +50,8 @@
                     <template #trigger>
                       <n-button type="error" :disabled="is_adm(ele.name)"> 删除</n-button>
                     </template>
-                    确定删除么?
-                  </n-popconfirm> -->
+确定删除么?
+</n-popconfirm> -->
                 </n-space>
               </td>
             </tr>
@@ -64,7 +64,7 @@
       </n-layout-footer>
     </n-layout>
 
-
+    <create_update_store ref="cus_ref" />
   </div>
 </template>
 
@@ -72,10 +72,13 @@
 import { get_store_list, StoreListReqData } from '@/api/store_api';
 import { OPTION } from '@/comm';
 import { useUserStore } from '@/store/user_store';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
+import create_update_store from './create_update_store.vue';
 
 const user_opts = ref<Array<OPTION<number>>>([])
 const user_store = useUserStore();
+const cus_ref = useTemplateRef("cus_ref");
+
 const data = ref({
   list: [],
   search_from: {
@@ -100,8 +103,9 @@ async function getList() {
 
 
 async function create_role_fn() {
-
+  cus_ref.value.create_store_fn();
 }
+
 async function pageUpdate(val: number) {
   data.value.search_from.page_no = val;
   await getList();

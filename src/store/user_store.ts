@@ -30,7 +30,7 @@ export const useUserStore = defineStore('user', () => {
         user_info.value.name = data.name;
         user_info.value.token = data.token;
         user_info.value.auth = data.auth;
-        console.log(user_info.value);
+        console.log("update_user",user_info.value);
 
         sessionStorage.setItem("USER_INFO", JSON.stringify(_.clone(user_info.value)));
     }
