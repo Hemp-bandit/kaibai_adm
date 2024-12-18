@@ -47,7 +47,6 @@ export class HwUpload {
   client: any;
   uploadResult: any;
   async initClient() {
-
     let res = await user_instance.get<any, T_basic_rsp<ObsRes>>("/obs/get_keys");
     const clientInfo = res.data;
     this.clientInfo = clientInfo;
@@ -57,17 +56,12 @@ export class HwUpload {
       server: "https://obs.cn-east-3.myhuaweicloud.com",
       security_token: clientInfo.credential.securitytoken
     });
-    // const serverPath = clientInfo.server.replace(/https?:\/\//, '');
-    // const prefixPath = clientInfo.cdn || clientInfo.domain || `${clientInfo.bucket}.${serverPath}`;
-    // this.uploadResult = {
-    //   url: `https://${prefixPath}/${clientInfo.objectKey}`
-    // };
   }
 
   /**
    * 直接上传
    */
-  singleUpload(name: string, file: File) {
+  async singleUpload(name: string, file: File) {
     const Key = `store/${name}`;
     // fake 一个进度
     let percent = 0;
@@ -77,19 +71,15 @@ export class HwUpload {
       SourceFile: file,
       ACL: this.client.enums.AclPublicRead
     };
-    this.client.putObject(uploadCofing).then((result) => {
-      console.log('CommonMsg:', result.CommonMsg);
-      if (result.InterfaceResult) {
-        console.log('InterfaceResult:', result.InterfaceResult);
-      }
-      if (result.CommonMsg.Status === 200) {
-        console.log(result.InterfaceResult);
-      } else {
-      }
-    }).catch(function (err) {
-      console.log(err);
-
-    });
+    const result = await this.client.putObject(uploadCofing);
+    console.log('CommonMsg:', result.CommonMsg);
+    if (result.InterfaceResult) {
+      console.log('InterfaceResult:', result.InterfaceResult);
+    }
+    if (result.CommonMsg.Status === 200) {
+      console.log(result.InterfaceResult);
+      return `https://kaibai-admin.obs.cn-east-3.myhuaweicloud.com/${Key}`
+    }
   }
 
   /**

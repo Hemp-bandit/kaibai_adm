@@ -32,7 +32,7 @@
 import { create_store, CreateStoreData } from "@/api/store_api";
 import { update_user } from "@/api/user_api";
 import { ModuleMode } from "@/comm";
-import Uploader, { HwUpload } from "@/comm/uploader";
+import { HwUpload } from "@/comm/uploader";
 import { createDiscreteApi, UploadFileInfo } from "naive-ui";
 import { computed, reactive, ref } from "vue";
 
@@ -107,10 +107,13 @@ async function update_user_handler() {
 const upload = new HwUpload()
 
 async function handleChange(options: { fileList: UploadFileInfo[], file: any }) {
+  if (!options) { return }
   console.log(options);
   try {
     await upload.initClient();
-    await upload.multipartUpload(options.file.name, options.file.file);
+    let url = await upload.singleUpload(options.file.name, options.file.file);
+    console.log(url);
+    store_info.value.picture = url;
   } catch (error) {
     console.log(error);
 
