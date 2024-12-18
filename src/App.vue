@@ -1,8 +1,7 @@
 <template>
   <div>
-    <router-view />
     <n-modal-provider>
-      <div></div>
+      <router-view />
     </n-modal-provider>
   </div>
 

@@ -3,7 +3,6 @@ import layout from './pages/layout.vue'
 import { useUserStore } from './store/user_store';
 import { useAccessStore } from './store/access_store';
 import { createDiscreteApi } from 'naive-ui';
-import login_tool from './comm/login_tool';
 
 const route = createRouter({
     routes: [
