@@ -69,14 +69,12 @@
 </template>
 
 <script lang="ts" setup>
-import { get_store_list, StoreListReqData } from '@/api/store_api';
+import { get_store_list } from '@/api/store_api';
 import { OPTION } from '@/comm';
-import { useUserStore } from '@/store/user_store';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import create_update_store from './create_update_store.vue';
 
 const user_opts = ref<Array<OPTION<number>>>([])
-const user_store = useUserStore();
 const cus_ref = useTemplateRef("cus_ref");
 
 const data = ref({
@@ -103,6 +101,7 @@ async function getList() {
 
 
 async function create_role_fn() {
+  console.log(cus_ref);
   cus_ref.value.create_store_fn();
 }
 

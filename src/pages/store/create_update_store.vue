@@ -14,8 +14,8 @@
       </n-form-item>
 
       <n-form-item label="店铺介绍:" path="description">
-        <n-upload action="" :default-upload="false" ref="upload" @change="handleChange" list-type="image"
-          accept=".png,.jpeg,.jpg" :max="1">
+        <n-upload action="" :default-upload="false" @change="handleChange" list-type="image" accept=".png,.jpeg,.jpg"
+          :max="1">
           <n-button>上传文件</n-button>
         </n-upload>
       </n-form-item>
@@ -38,7 +38,6 @@ import { computed, reactive, ref } from "vue";
 
 const showModal = ref(false);
 const mode = ref(ModuleMode.CREATE);
-
 const title = computed(() => mode.value === ModuleMode.CREATE ? "创建用户" : "更新用户")
 
 // let local_user =
