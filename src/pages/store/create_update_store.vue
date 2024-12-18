@@ -9,8 +9,15 @@
       </n-form-item>
 
       <n-form-item label="店铺介绍:" path="description">
-        <n-input v-model:value="store_info.description" type="text" maxlength="100" placeholder="请输入店铺介绍" clearable
+        <n-input v-model:value="store_info.description" type="textarea" maxlength="100" placeholder="请输入店铺介绍" clearable
           show-count />
+      </n-form-item>
+
+      <n-form-item label="店铺介绍:" path="description">
+        <n-upload action="" :default-upload="false" ref="upload" @change="handleChange" list-type="image"
+          accept=".png,.jpeg,.jpg" :max="1">
+          <n-button>上传文件</n-button>
+        </n-upload>
       </n-form-item>
     </n-form>
 
@@ -25,7 +32,7 @@
 import { create_store, CreateStoreData } from "@/api/store_api";
 import { update_user } from "@/api/user_api";
 import { ModuleMode } from "@/comm";
-import { createDiscreteApi } from "naive-ui";
+import { createDiscreteApi, UploadFileInfo } from "naive-ui";
 import { computed, reactive, ref } from "vue";
 
 const showModal = ref(false);
@@ -94,6 +101,11 @@ async function update_user_handler() {
   } catch (e) {
     console.error(e);
   }
+}
+
+function handleChange(options: { fileList: UploadFileInfo[] }) {
+  console.log(options);
+
 }
 
 

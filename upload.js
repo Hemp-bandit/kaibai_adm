@@ -1,88 +1,60 @@
 const ObsClient = require("esdk-obs-nodejs");
 const fs = require('fs');
 const path = require('path');
-const urlLib = require('url');
-const https = require('https')
-console.log('[ ObsClient ] >', ObsClient)
+const axios = require('axios');
+
 // 创建ObsClient实例
-const obsClient = new ObsClient({
-  access_key_id: "HZZSCSRYJD9BZTQX0L8I",
-  secret_access_key: "qLV1yUN1OAY2nNxdv7ZEAfP3V44kDNMlU6hFvFa9",
-  server: "https://obs.cn-east-3.myhuaweicloud.com",
+axios.get("http://kaibai.cloud:30000/api/obs/get_keys").then(res => {
+  console.log('[ res ] >', res.data)
+  if (res.data.code === 0) {
+    let credential = res.data.data.credential;
+
+
+    const obsClient = new ObsClient({
+      access_key_id: credential.access,
+      secret_access_key: credential.secret,
+      security_token: credential.securitytoken,
+      server: "https://obs.cn-east-3.myhuaweicloud.com",
+    });
+
+
+    const dir = fs.readdirSync(path.resolve(__dirname, './dist'))
+    dir.forEach(d => {
+      const f_name = `adm/${d}`;
+      const content = fs.readFileSync(path.resolve(__dirname, `./dist/${d}`));
+      putObject(f_name, content);
+    })
+
+  }
 });
 
-function createSignedUrlSync(fileName, fileContent) {
-  // 指定HTTP方法类型, 这里以PUT为例
-  const method = 'PUT';
-  const params = {
-    // 指定存储桶名称
-    Bucket: "kaibai-admin",
-    // 指定对象名，此处以 example/objectname 为例
-    Key: fileName,
-    // 指定HTTP方法类型
-    Method: method,
-    // 指定签名URL的过期时间，这里以3600为例，单位为秒
-    Expires: 3600,
-    // 指定请求中携带的头域
-    Headers: {
-      "Content-Type": "text/plain",
-    }
+
+async function putObject(Key, Body) {
+  try {
+    const params = {
+      // 指定存储桶名称
+      Bucket: "kaibai-admin",
+      // 指定对象名，此处以 example/objectname 为例
+      Key,
+      // 指定文本对象
+      Body
+    };
+    // 文本上传对象
+    const result = await obsClient.putObject(params);
+    if (result.CommonMsg.Status <= 300) {
+      console.log("Put object(%s) under the bucket(%s) successful!!", params.Key, params.Bucket);
+      console.log("RequestId: %s", result.CommonMsg.RequestId);
+      console.log("StorageClass:%s, ETag:%s", result.InterfaceResult.StorageClass, result.InterfaceResult.ETag);
+      return;
+    };
+    console.log("An ObsError was found, which means your request sent to OBS was rejected with an error response.");
+    console.log("Status: %d", result.CommonMsg.Status);
+    console.log("Code: %s", result.CommonMsg.Code);
+    console.log("Message: %s", result.CommonMsg.Message);
+    console.log("RequestId: %s", result.CommonMsg.RequestId);
+  } catch (error) {
+    console.log("An Exception was found, which means the client encountered an internal problem when attempting to communicate with OBS, for example, the client was unable to access the network.");
+    console.log(error);
   };
-
-  // 生成上传对象的带授权信息的URL
-  const res = obsClient.createSignedUrlSync(params);
-  console.log("SignedUrl: %s", res.SignedUrl);
-  console.log("ActualSignedRequestHeaders: %v", res.ActualSignedRequestHeaders);
-
-
-
-  // 使用PUT请求上传对象
-  var url = urlLib.parse(res.SignedUrl);
-  var req = https.request({
-    method: method,
-    host: url.hostname,
-    port: url.port,
-    path: url.path,
-    rejectUnauthorized: false,
-    headers: res.ActualSignedRequestHeaders || {}
-  });
-  console.log('Creating object using url:' + res.SignedUrl);
-
-  req.on('response', (serverback) => {
-    var buffers = [];
-    serverback.on('data', (data) => {
-      buffers.push(data);
-    }).on('end', () => {
-      if (serverback.statusCode < 300) {
-        console.log('Creating object using temporary signature succeed.');
-      } else {
-        console.log('Creating object using temporary signature failed!');
-        console.log('status:' + serverback.statusCode);
-        console.log('\n');
-      };
-      buffers = Buffer.concat(buffers);
-      if (buffers.length > 0) {
-        console.log(buffers.toString());
-      };
-      console.log('\n');
-    });
-  }).on('error', (err) => {
-    console.log('Creating object using temporary signature failed!');
-    console.log(err);
-    console.log('\n');
-  });
-
-  if (fileContent) {
-    req.write(fileContent);
-  };
-  req.end();
 };
-
-const dir = fs.readdirSync(path.resolve(__dirname, './dist'))
-dir.forEach(d => {
-  const f_name = `adm/${d}`;
-  const content = fs.readFileSync(path.resolve(__dirname, `./dist/${d}`));
-  createSignedUrlSync(f_name, content);
-})
-
 

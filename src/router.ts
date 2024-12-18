@@ -81,9 +81,7 @@ route.beforeEach((to, from,) => {
                 path: '/login',
             }
         }
-        const user_auth = login_tool.auth;
-        console.log('[ user_auth ] >', user_auth)
-        if (!user_auth) {
+        if (!user_store.is_login()) {
             return {
                 path: '/dashboard',
             }
@@ -91,7 +89,7 @@ route.beforeEach((to, from,) => {
         // @ts-ignore
         const req_list = to.meta.auths as string[];
         if (access_store.has_map()) {
-            if (!access_store.verify_auth(user_auth, req_list)) {
+            if (!access_store.verify_auth(user_store.user_info.auth, req_list)) {
                 msg.error("该用户没有权限访问,请向管理员申请权限")
                 return {
                     path: '/dashboard',

@@ -19,6 +19,8 @@ class LoginTool {
         const login_res = await user_instance.post<any, T_basic_rsp<string>>("/auth/login", data);
         let decode_info: string = atob(login_res.data);
         const info: UserLoginData = JSON.parse(decode_info)
+        const user = useUserStore();
+        user.update_user(info)
         info.token = login_res.data
         return info;
     }
