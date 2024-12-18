@@ -32,6 +32,7 @@
 import { create_store, CreateStoreData } from "@/api/store_api";
 import { update_user } from "@/api/user_api";
 import { ModuleMode } from "@/comm";
+import Uploader from "@/comm/uploader";
 import { createDiscreteApi, UploadFileInfo } from "naive-ui";
 import { computed, reactive, ref } from "vue";
 
@@ -103,9 +104,17 @@ async function update_user_handler() {
   }
 }
 
-function handleChange(options: { fileList: UploadFileInfo[] }) {
-  console.log(options);
+const upload = new Uploader()
 
+async function handleChange(options: { fileList: UploadFileInfo[], file: File }) {
+  console.log(options);
+  try {
+    await upload.init();
+    await upload.upload(options.file.name, options.file)
+  } catch (error) {
+    console.log(error);
+
+  }
 }
 
 
