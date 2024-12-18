@@ -19,26 +19,25 @@
 
       <n-form-item label="店铺预览图:" path="picture">
         <n-upload action="" :default-upload="false" @change="handleChange" list-type="image" accept=".png,.jpeg,.jpg"
-          :max="1">
+          :default-file-list="default_file_list" :max="1">
           <n-button>上传文件</n-button>
         </n-upload>
       </n-form-item>
     </n-form>
 
     <template #footer>
-      <n-button @click="create_user_handler" v-if="mode === ModuleMode.CREATE" type="info">{{ title }}</n-button>
-      <n-button @click="update_user_handler" v-if="mode === ModuleMode.UPDATE" type="info">{{ title }}</n-button>
+      <n-button @click="create_store_handler" v-if="mode === ModuleMode.CREATE" type="info">{{ title }}</n-button>
+      <n-button @click="update_handler" v-if="mode === ModuleMode.UPDATE" type="info">{{ title }}</n-button>
     </template>
   </n-modal>
 </template>
 
 <script setup lang="ts">
-import { create_store, CreateStoreData } from "@/api/store_api";
-import { update_user } from "@/api/user_api";
+import { create_store, CreateStoreData, update_store } from "@/api/store_api";
 import { ModuleMode } from "@/comm";
 import { HwUpload } from "@/comm/uploader";
 import { useUserStore } from "@/store/user_store";
-import { createDiscreteApi, UploadFileInfo } from "naive-ui";
+import { createDiscreteApi, FormItemRule, UploadFileInfo } from "naive-ui";
 import { computed, reactive, ref, useTemplateRef } from "vue";
 
 const user_store = useUserStore();
@@ -57,7 +56,8 @@ class LocalStore implements CreateStoreData {
   name: string = "";
 }
 
-let store_info = ref(new LocalStore());
+const store_info = ref(new LocalStore());
+const default_file_list = ref([])
 
 const rules = reactive({
   name: {
@@ -72,8 +72,10 @@ const rules = reactive({
   },
   picture: {
     required: true,
-    message: '请输上传店铺图片',
-    trigger: 'blur'
+    validator(rule: FormItemRule, value: string) {
+      if (!value) return new Error('请输上传店铺图片')
+      return true
+    }
   },
   shell: {
     required: true,
@@ -85,7 +87,7 @@ const msg = createDiscreteApi(['message']);
 const emit = defineEmits(['reflash'])
 
 
-async function create_user_handler() {
+async function create_store_handler() {
   try {
     // @ts-ignore
     await from_ref.value.validate();
@@ -99,10 +101,10 @@ async function create_user_handler() {
   }
 }
 
-async function update_user_handler() {
+async function update_handler() {
   try {
     // @ts-ignore
-    let res = await update_user(store_info.value);
+    let res = await update_store(store_info.value);
     msg.message.success(res.msg);
     showModal.value = false;
     mode.value = ModuleMode.CREATE;
@@ -114,11 +116,10 @@ async function update_user_handler() {
 
 const upload = new HwUpload()
 
-async function handleChange(options: { fileList: UploadFileInfo[], file: any }) {
-  if (!options) { store_info.value.picture = null; return }
+async function handleChange(options: { file: UploadFileInfo, fileList: Array<UploadFileInfo>, event?: Event }) {
+  console.log('[ options ] >', options)
+  if (!options || options.file.status === 'removed') { store_info.value.picture = null; return }
   try {
-    // @ts-ignore
-    await from_ref.value.validate();
     await upload.initClient();
     let url = await upload.singleUpload(options.file.name, options.file.file);
     console.log(url);
@@ -137,8 +138,15 @@ const create_store_fn = () => {
 
 const update_store_fn = (new_store: CreateStoreData) => {
   mode.value = ModuleMode.UPDATE;
-  store_info.value = new_store;
   showModal.value = true;
+  store_info.value = new_store;
+  const info: UploadFileInfo = {
+    id: "",
+    name: new_store.name,
+    status: "finished",
+    url: new_store.picture
+  }
+  default_file_list.value = [info]
 }
 
 function close() {

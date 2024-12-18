@@ -1,3 +1,5 @@
+import { get_user_option } from "@/api/user_api"
+import { Ref } from "vue"
 import { OptionData } from "./entity"
 
 export enum ALL {
@@ -54,7 +56,6 @@ export function arrayDataToOption(data: Array<OptionData>): OPTION<number>[] {
     return arr
 }
 
-
 export function checkPhone(phone: string) {
     let reg = /^1[3-9]\d{9}/;
     return reg.test(phone);
@@ -62,4 +63,16 @@ export function checkPhone(phone: string) {
 
 export function is_adm(name: string): boolean {
     return name.toUpperCase() === 'ADMIN'
+}
+
+/**
+ * 获取页面 用户选项数据
+ * @param user_opts
+ */
+export async function get_page_user_option(user_opts: Ref<Array<OPTION<number>>>) {
+    try {
+        let opt = await get_user_option();
+        user_opts.value = arrayDataToOption(opt.data)
+    } catch (error) {
+    }
 }

@@ -106,8 +106,6 @@ async function handleSearch() {
   try {
     let opt = await get_user_option();
     user_opts.value = arrayDataToOption(opt.data)
-
-
   } catch (error) {
 
   }

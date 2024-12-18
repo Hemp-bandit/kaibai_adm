@@ -49,10 +49,8 @@
               <td>{{ ele.update_time }}</td>
               <td>
                 <n-space>
-                  <!-- <n-button type=" warning" @click="update_role(ele)" :disabled="is_adm(ele.name)">修改</n-button>
-                  <n-button type="warning" @click="access_info_handler(ele.id)"
-                    :disabled="is_adm(ele.name)">权限信息</n-button>
-                  <n-popconfirm @positive-click="delete_role(ele.id)" positive-text="确定" negative-text="取消">
+                  <n-button type="warning" @click="update_store(ele)">修改</n-button>
+                  <!-- <n-popconfirm @positive-click="delete_role(ele.id)" positive-text="确定" negative-text="取消">
                     <template #trigger>
                       <n-button type="error" :disabled="is_adm(ele.name)"> 删除</n-button>
                     </template>
@@ -70,16 +68,16 @@
       </n-layout-footer>
     </n-layout>
 
-    <create_update_store ref="cus_ref" />
+    <create_update_store ref="cus_ref" @reflash="getList" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { get_store_list } from '@/api/store_api';
-import { OPTION } from '@/comm';
+import { get_page_user_option, OPTION } from '@/comm';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import create_update_store from './create_update_store.vue';
-
+import _ from 'lodash'
 const user_opts = ref<Array<OPTION<number>>>([])
 const cus_ref = useTemplateRef("cus_ref");
 
@@ -96,7 +94,9 @@ const data = ref({
 
 onMounted(async () => {
   await getList();
+  await get_page_user_option(user_opts);
 })
+
 
 async function getList() {
   const req_data = data.value.search_from
@@ -106,8 +106,11 @@ async function getList() {
 }
 
 
-async function create_role_fn() {
+function create_role_fn() {
   cus_ref.value.create_store_fn();
+}
+function update_store(ele) {
+  cus_ref.value.update_store_fn(_.clone(ele));
 }
 
 async function pageUpdate(val: number) {
