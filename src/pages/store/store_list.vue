@@ -101,7 +101,6 @@ async function getList() {
 
 
 async function create_role_fn() {
-  console.log(cus_ref);
   cus_ref.value.create_store_fn();
 }
 
