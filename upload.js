@@ -3,32 +3,32 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-// 创建ObsClient实例
-axios.get("http://kaibai.cloud:30000/api/obs/get_keys").then(res => {
-  console.log('[ res ] >', res.data)
+let obsClient = null
+
+async function init() {
+  // 创建ObsClient实例
+  let res = await axios.get("http://kaibai.cloud:30000/api/obs/get_keys")
   if (res.data.code === 0) {
     let credential = res.data.data.credential;
 
-
-    const obsClient = new ObsClient({
+    obsClient = new ObsClient({
       access_key_id: credential.access,
       secret_access_key: credential.secret,
       security_token: credential.securitytoken,
       server: "https://obs.cn-east-3.myhuaweicloud.com",
     });
-
-
+    console.log('[ obsClient ] >', obsClient)
     const dir = fs.readdirSync(path.resolve(__dirname, './dist'))
-    dir.forEach(d => {
+    for (const d of dir) {
       const f_name = `adm/${d}`;
+      console.log('[ f_name ] >', f_name)
       const content = fs.readFileSync(path.resolve(__dirname, `./dist/${d}`));
-      putObject(f_name, content);
-    })
+      await putObject(f_name, content);
+    }
+
 
   }
-});
-
-
+}
 async function putObject(Key, Body) {
   try {
     const params = {
@@ -57,4 +57,6 @@ async function putObject(Key, Body) {
     console.log(error);
   };
 };
+
+init();
 
