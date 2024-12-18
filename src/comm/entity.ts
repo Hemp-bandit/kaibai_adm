@@ -71,3 +71,13 @@ export interface AccessData extends RoleData {
 }
 
 export type OptionData = Pick<UserData, "name" | "id">;
+
+export interface ObsRes {
+    credential: {
+        access: string;
+        expires_at: Date;
+        secret: string;
+        securitytoken: string;
+    }
+    ;
+}
